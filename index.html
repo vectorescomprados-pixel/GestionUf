@@ -7,53 +7,83 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
 </head>
-<body>
+<body class="dark-mode">
     <div class="wrap">
+        <div style="text-align: right; margin-bottom: 10px;">
+            <label class="switch">
+                <input type="checkbox" id="mode-toggle" checked>
+                <span class="slider"></span>
+            </label>
+            <span id="mode-text" style="font-size: 0.8em; margin-left: 5px;">Modo Oscuro</span>
+        </div>
+
         <div id="login-screen" class="card">
             <h1>GestiónUF</h1>
-            <p class="muted">Acceso al Sistema</p>
             <input id="login-user" placeholder="Usuario">
             <input id="login-pass" type="password" placeholder="Contraseña">
             <div class="grid-btns">
-                <button id="btn-login" class="btn primary">Iniciar sesión</button>
-                <button id="btn-demo" class="btn">Modo Demo</button>
+                <button id="btn-login" class="btn primary">Entrar</button>
+                <button id="btn-demo" class="btn">Demo</button>
             </div>
             <button id="btn-recover" class="btn ghost" style="width:100%">Recuperar contraseña</button>
-            <p id="login-msg" style="color: #ef4444; margin-top: 10px;"></p>
+            <p id="login-msg" style="color:red"></p>
         </div>
 
         <div id="main-screen" class="card hidden">
             <header>
-                <h2>Gestión de Unidades</h2>
+                <h2>Panel de Control</h2>
                 <p class="muted">Usuario: <span id="current-user"></span></p>
             </header>
 
             <div class="grid-btns">
-                <button id="btn-logout" class="btn danger">Cerrar Sesión</button>
-                <button id="btn-register-user" class="btn">Registrar Usuario</button>
+                <button id="btn-logout" class="btn danger">Salir</button>
+                <button id="btn-register-user" class="btn">Nuevo Usuario</button>
                 <button id="btn-import" class="btn">Importar CSV</button>
                 <button id="btn-export" class="btn">Exportar CSV</button>
             </div>
 
             <section class="search-section">
-                <input id="search-text" placeholder="Buscar por UF, nombre o tel...">
+                <input id="search-text" placeholder="Buscar UF, Nombre o Tel...">
                 <div class="grid-btns">
                     <button id="btn-search" class="btn primary">Buscar</button>
-                    <button id="btn-clear" class="btn">Limpiar / Ver Todo</button>
+                    <button id="btn-clear" class="btn">Ver Todo</button>
                 </div>
             </section>
 
-            <button id="btn-add" class="btn primary" style="margin: 15px 0;">+ Agregar Departamento</button>
+            <button id="btn-add" class="btn primary" style="margin: 15px 0; width: 100%;">+ AGREGAR REGISTRO</button>
 
             <div class="grid-btns">
                 <button id="btn-list" class="btn">Listar Todos</button>
-                <button id="btn-empty" class="btn">Listar Vacíos</button>
-                <button id="btn-delete-db" class="btn danger">Borrar Base</button>
+                <button id="btn-empty" class="btn">Ver Vacíos</button>
             </div>
+            <button id="btn-delete-db" class="btn danger" style="width: 100%; margin-top: 10px;">BORRAR BASE DE DATOS</button>
 
             <div id="list"></div>
         </div>
     </div>
+
+    <div id="modal-form" class="modal hidden">
+        <div class="modal-content card">
+            <h3 id="modal-title">Datos del Registro</h3>
+            <div style="text-align: left;">
+                <label><small>Unidad Funcional:</small></label>
+                <input id="f-uf" placeholder="Ej: 1A">
+                <label><small>Nombre Propietario:</small></label>
+                <input id="f-prop" placeholder="Nombre completo">
+                <label><small>Teléfono Propietario:</small></label>
+                <input id="f-telp" placeholder="Ej: 1122334455">
+                <label><small>Nombre Inquilino:</small></label>
+                <input id="f-inq" placeholder="Nombre completo">
+                <label><small>Teléfono Inquilino:</small></label>
+                <input id="f-teli" placeholder="Ej: 1122334455">
+            </div>
+            <div class="grid-btns" style="margin-top: 15px;">
+                <button id="btn-save" class="btn primary">Guardar</button>
+                <button id="btn-cancel" class="btn danger">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>

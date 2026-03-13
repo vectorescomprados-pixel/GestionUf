@@ -5,6 +5,7 @@ const ASSETS = [
   'style.css',
   'app.js',
   'manifest.json'
+  'icono.png'
 ];
 
 // Instalar y guardar archivos en caché

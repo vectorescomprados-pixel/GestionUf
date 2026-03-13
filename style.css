@@ -1,93 +1,43 @@
-body {
-    background: #0f172a;
-    color: #f8fafc;
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
+:root {
+    --bg: #f4f6f9;
+    --card-bg: #ffffff;
+    --text: #1e293b;
+    --border: #cbd5e1;
+    --input-bg: #ffffff;
 }
 
+body.dark-mode {
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --text: #f8fafc;
+    --border: #334155;
+    --input-bg: #0f172a;
+}
+
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; transition: 0.3s; padding: 15px; display: flex; justify-content: center; }
 .wrap { width: 100%; max-width: 500px; }
+.card { background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.15); text-align: center; }
+input { width: 100%; padding: 12px; margin: 5px 0 15px 0; border-radius: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); box-sizing: border-box; }
 
-.card {
-    background: #1e293b;
-    padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    border: 1px solid #334155;
-    text-align: center;
-}
+.grid-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn { padding: 12px; border-radius: 8px; border: none; background: #334155; color: white; cursor: pointer; font-weight: bold; }
+.primary { background: #2563eb; }
+.danger { background: #ef4444; }
+.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
 
-h1, h2 { margin-bottom: 5px; color: #f8fafc; }
-.muted { color: #94a3b8; font-size: 0.9em; margin-bottom: 15px; }
+.item { background: var(--card-bg); padding: 15px; border-bottom: 2px solid var(--border); text-align: left; position: relative; margin-top: 10px; border-radius: 8px; }
+.contact-link { text-decoration: none; font-size: 1.3em; background: var(--bg); padding: 4px 8px; border-radius: 6px; margin-left: 5px; border: 1px solid var(--border); }
 
-input {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 8px;
-    border: 1px solid #334155;
-    background: #0f172a;
-    color: white;
-    box-sizing: border-box;
-}
+.modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal-content { width: 95%; max-width: 420px; }
 
-.grid-btns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.btn {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #475569;
-    background: #334155;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-}
-
-.btn:active { transform: scale(0.96); }
-.primary { background: #2563eb; border: none; }
-.danger { background: #ef4444; border: none; }
-.ghost { background: transparent; border: 1px solid #334155; margin-top: 10px; }
-
-#list { margin-top: 20px; text-align: left; }
-
-.item {
-    background: #1e293b;
-    padding: 15px;
-    border-bottom: 1px solid #334155;
-    margin-bottom: 5px;
-    position: relative;
-}
-
-.contact-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 4px 0;
-}
-
-.contact-link {
-    text-decoration: none;
-    font-size: 1.2em;
-    background: #0f172a;
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
-.btn-mini {
-    padding: 5px 10px;
-    font-size: 0.8em;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    margin-left: 5px;
-}
+/* Switch Style */
+.switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+.slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #2563eb; }
+input:checked + .slider:before { transform: translateX(20px); }
 
 .hidden { display: none; }
+.muted { color: #94a3b8; font-size: 0.85em; }
