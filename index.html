@@ -1,0 +1,59 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>GestiónUF Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="wrap">
+        <div id="login-screen" class="card">
+            <h1>GestiónUF</h1>
+            <p class="muted">Acceso al Sistema</p>
+            <input id="login-user" placeholder="Usuario">
+            <input id="login-pass" type="password" placeholder="Contraseña">
+            <div class="grid-btns">
+                <button id="btn-login" class="btn primary">Iniciar sesión</button>
+                <button id="btn-demo" class="btn">Modo Demo</button>
+            </div>
+            <button id="btn-recover" class="btn ghost" style="width:100%">Recuperar contraseña</button>
+            <p id="login-msg" style="color: #ef4444; margin-top: 10px;"></p>
+        </div>
+
+        <div id="main-screen" class="card hidden">
+            <header>
+                <h2>Gestión de Unidades</h2>
+                <p class="muted">Usuario: <span id="current-user"></span></p>
+            </header>
+
+            <div class="grid-btns">
+                <button id="btn-logout" class="btn danger">Cerrar Sesión</button>
+                <button id="btn-register-user" class="btn">Registrar Usuario</button>
+                <button id="btn-import" class="btn">Importar CSV</button>
+                <button id="btn-export" class="btn">Exportar CSV</button>
+            </div>
+
+            <section class="search-section">
+                <input id="search-text" placeholder="Buscar por UF, nombre o tel...">
+                <div class="grid-btns">
+                    <button id="btn-search" class="btn primary">Buscar</button>
+                    <button id="btn-clear" class="btn">Limpiar / Ver Todo</button>
+                </div>
+            </section>
+
+            <button id="btn-add" class="btn primary" style="margin: 15px 0;">+ Agregar Departamento</button>
+
+            <div class="grid-btns">
+                <button id="btn-list" class="btn">Listar Todos</button>
+                <button id="btn-empty" class="btn">Listar Vacíos</button>
+                <button id="btn-delete-db" class="btn danger">Borrar Base</button>
+            </div>
+
+            <div id="list"></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
