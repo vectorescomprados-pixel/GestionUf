@@ -2,19 +2,19 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
     <title>GestiónUF Pro</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
 </head>
 <body class="dark-mode">
     <div class="wrap">
-        <div style="text-align: right; margin-bottom: 10px;">
+        <div class="mode-container">
+            <span id="mode-text">Modo Oscuro</span>
             <label class="switch">
                 <input type="checkbox" id="mode-toggle" checked>
                 <span class="slider"></span>
             </label>
-            <span id="mode-text" style="font-size: 0.8em; margin-left: 5px;">Modo Oscuro</span>
         </div>
 
         <div id="login-screen" class="card">
@@ -26,7 +26,7 @@
                 <button id="btn-demo" class="btn">Demo</button>
             </div>
             <button id="btn-recover" class="btn ghost" style="width:100%">Recuperar contraseña</button>
-            <p id="login-msg" style="color:red"></p>
+            <p id="login-msg" style="color:#ef4444; font-size: 0.8em; margin-top: 10px;"></p>
         </div>
 
         <div id="main-screen" class="card hidden">
@@ -43,7 +43,7 @@
             </div>
 
             <section class="search-section">
-                <input id="search-text" placeholder="Buscar UF, Nombre o Tel...">
+                <input id="search-text" placeholder="Buscar UF, nombre o tel...">
                 <div class="grid-btns">
                     <button id="btn-search" class="btn primary">Buscar</button>
                     <button id="btn-clear" class="btn">Ver Todo</button>
@@ -65,17 +65,12 @@
     <div id="modal-form" class="modal hidden">
         <div class="modal-content card">
             <h3 id="modal-title">Datos del Registro</h3>
-            <div style="text-align: left;">
-                <label><small>Unidad Funcional:</small></label>
-                <input id="f-uf" placeholder="Ej: 1A">
-                <label><small>Nombre Propietario:</small></label>
-                <input id="f-prop" placeholder="Nombre completo">
-                <label><small>Teléfono Propietario:</small></label>
-                <input id="f-telp" placeholder="Ej: 1122334455">
-                <label><small>Nombre Inquilino:</small></label>
-                <input id="f-inq" placeholder="Nombre completo">
-                <label><small>Teléfono Inquilino:</small></label>
-                <input id="f-teli" placeholder="Ej: 1122334455">
+            <div class="form-body">
+                <input id="f-uf" placeholder="Unidad Funcional (Ej: 5B)">
+                <input id="f-prop" placeholder="Nombre Propietario">
+                <input id="f-telp" placeholder="Teléfono Propietario">
+                <input id="f-inq" placeholder="Nombre Inquilino">
+                <input id="f-teli" placeholder="Teléfono Inquilino">
             </div>
             <div class="grid-btns" style="margin-top: 15px;">
                 <button id="btn-save" class="btn primary">Guardar</button>
