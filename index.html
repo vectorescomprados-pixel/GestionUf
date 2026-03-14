@@ -5,71 +5,103 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
     <title>GestiónUF Pro</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="dark-mode">
+    <input type="file" id="csv-file" accept=".csv" style="display:none">
+
     <div class="wrap">
-        <div class="mode-container">
-            <span id="mode-text">Modo Oscuro</span>
-            <label class="switch">
-                <input type="checkbox" id="mode-toggle" checked>
-                <span class="slider"></span>
-            </label>
+        <div class="top-controls">
+            <div class="control-group">
+                <span>Ver Log</span>
+                <label class="switch"><input type="checkbox" id="log-toggle" checked><span class="slider"></span></label>
+            </div>
+            <div class="control-group">
+                <span>Modo Oscuro</span>
+                <label class="switch"><input type="checkbox" id="mode-toggle" checked><span class="slider"></span></label>
+            </div>
         </div>
 
         <div id="login-screen" class="card">
             <h1>GestiónUF</h1>
             <input id="login-user" placeholder="Usuario">
             <input id="login-pass" type="password" placeholder="Contraseña">
-            <div class="grid-btns">
-                <button id="btn-login" class="btn primary">Entrar</button>
-                <button id="btn-demo" class="btn">Demo</button>
-            </div>
-            <button id="btn-recover" class="btn ghost" style="width:100%">Recuperar contraseña</button>
-            <p id="login-msg" style="color:#ef4444; font-size: 0.8em; margin-top: 10px;"></p>
+            <button id="btn-login" class="btn primary" style="width:100%">Entrar</button>
         </div>
 
         <div id="main-screen" class="card hidden">
             <header>
-                <h2>Panel de Control</h2>
-                <p class="muted">Usuario: <span id="current-user"></span></p>
+                <h2 id="display-user-title">Panel de Control</h2>
+                <p class="muted"><span id="session-label">Sesión</span>: <span id="current-user-display" style="font-weight:bold; color:var(--primary)"></span></p>
             </header>
+            
             <div class="grid-btns">
                 <button id="btn-logout" class="btn danger">Salir</button>
-                <button id="btn-register-user" class="btn">Nuevo Usuario</button>
-                <button id="btn-import" class="btn">Importar CSV</button>
-                <button id="btn-export" class="btn">Exportar CSV</button>
+                <button id="btn-manage-users" class="btn admin-only">Gestionar Cuentas</button>
+                <button id="btn-import" class="btn admin-only">Importar CSV</button>
+                <button id="btn-export" class="btn admin-only">Exportar CSV</button>
             </div>
+
             <section class="search-section">
                 <input id="search-text" placeholder="Buscar UF, nombre o tel...">
                 <div class="grid-btns">
                     <button id="btn-search" class="btn primary">Buscar</button>
-                    <button id="btn-clear" class="btn">Ver Todo</button>
+                    <button id="btn-clear" class="btn">Limpiar</button>
                 </div>
             </section>
-            <button id="btn-add" class="btn primary" style="margin: 15px 0; width: 100%;">+ AGREGAR REGISTRO</button>
+
+            <button id="btn-add" class="btn primary" style="margin: 10px 0; width:100%">+ AGREGAR REGISTRO</button>
+
             <div class="grid-btns">
                 <button id="btn-list" class="btn">Listar Todos</button>
                 <button id="btn-empty" class="btn">Ver Vacíos</button>
             </div>
-            <button id="btn-delete-db" class="btn danger" style="width: 100%; margin-top: 10px;">BORRAR BASE DE DATOS</button>
+            
             <div id="list"></div>
+
+            <div id="log-container" class="log-container">
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <h4 class="muted">Log de Acciones</h4>
+                    <button id="btn-export-log" class="btn admin-only" style="padding:2px 5px; font-size:9px">Bajar Log</button>
+                </div>
+                <div id="log-list"></div>
+            </div>
+            
+            <button id="btn-delete-db" class="btn danger admin-only" style="width:100%; margin-top:15px; font-size:10px; opacity:0.7">BORRAR BASE</button>
         </div>
     </div>
 
     <div id="modal-form" class="modal hidden">
         <div class="modal-content card">
-            <h3 id="modal-title">Datos del Registro</h3>
+            <h3 id="modal-title">Datos</h3>
             <div class="form-body">
-                <input id="f-uf" placeholder="Unidad Funcional (Ej: 5B)">
-                <input id="f-prop" placeholder="Nombre Propietario">
-                <input id="f-telp" placeholder="Teléfono Propietario">
-                <input id="f-inq" placeholder="Nombre Inquilino">
-                <input id="f-teli" placeholder="Teléfono Inquilino">
+                <input id="f-uf" placeholder="UF">
+                <input id="f-prop" placeholder="Propietario">
+                <input id="f-telp" placeholder="Tel Propietario">
+                <input id="f-inq" placeholder="Inquilino">
+                <input id="f-teli" placeholder="Tel Inquilino">
             </div>
-            <div class="grid-btns" style="margin-top: 15px;">
+            <div class="grid-btns">
                 <button id="btn-save" class="btn primary">Guardar</button>
                 <button id="btn-cancel" class="btn danger">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-users-list" class="modal hidden">
+        <div class="modal-content card" style="max-width:400px; width:90%">
+            <h3>Cuentas</h3>
+            <div id="users-admin-list" style="max-height:150px; overflow-y:auto; margin-bottom:15px"></div>
+            <h4>Nuevo Usuario</h4>
+            <input id="u-name" placeholder="Nombre">
+            <input id="u-pass" type="password" placeholder="Clave">
+            <select id="u-role" class="custom-select">
+                <option value="user">Usuario Común</option>
+                <option value="admin">Administrador</option>
+            </select>
+            <div class="grid-btns">
+                <button id="btn-save-user" class="btn primary">Crear</button>
+                <button id="btn-close-users" class="btn danger">Cerrar</button>
             </div>
         </div>
     </div>
