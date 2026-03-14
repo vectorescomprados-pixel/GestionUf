@@ -27,11 +27,12 @@
             <input id="login-user" placeholder="Usuario">
             <input id="login-pass" type="password" placeholder="Contraseña">
             <button id="btn-login" class="btn primary" style="width:100%">Entrar</button>
+            <button id="btn-recover" class="btn ghost" style="width:100%; margin-top: 15px; font-size: 12px;">¿Olvidaste tu contraseña?</button>
         </div>
 
         <div id="main-screen" class="card hidden">
             <header>
-                <h2 id="display-user-title">Panel de Control</h2>
+                <h2>Panel de Control</h2>
                 <p class="muted"><span id="session-label">Sesión</span>: <span id="current-user-display" style="font-weight:bold; color:var(--primary)"></span></p>
             </header>
             
@@ -60,7 +61,7 @@
             <div id="list"></div>
 
             <div id="log-container" class="log-container">
-                <div style="display:flex; justify-content:space-between; align-items:center">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px">
                     <h4 class="muted">Log de Acciones</h4>
                     <button id="btn-export-log" class="btn admin-only" style="padding:2px 5px; font-size:9px">Bajar Log</button>
                 </div>
@@ -73,9 +74,9 @@
 
     <div id="modal-form" class="modal hidden">
         <div class="modal-content card">
-            <h3 id="modal-title">Datos</h3>
+            <h3>Datos UF</h3>
             <div class="form-body">
-                <input id="f-uf" placeholder="UF">
+                <input id="f-uf" placeholder="Unidad Funcional">
                 <input id="f-prop" placeholder="Propietario">
                 <input id="f-telp" placeholder="Tel Propietario">
                 <input id="f-inq" placeholder="Inquilino">
@@ -91,11 +92,12 @@
     <div id="modal-users-list" class="modal hidden">
         <div class="modal-content card" style="max-width:400px; width:90%">
             <h3>Cuentas</h3>
-            <div id="users-admin-list" style="max-height:150px; overflow-y:auto; margin-bottom:15px"></div>
+            <div id="users-admin-list" style="max-height:180px; overflow-y:auto; margin-bottom:15px"></div>
+            <hr>
             <h4>Nuevo Usuario</h4>
             <input id="u-name" placeholder="Nombre">
             <input id="u-pass" type="password" placeholder="Clave">
-            <select id="u-role" class="custom-select">
+            <select id="u-role">
                 <option value="user">Usuario Común</option>
                 <option value="admin">Administrador</option>
             </select>
@@ -105,6 +107,23 @@
             </div>
         </div>
     </div>
+
+    <div id="modal-recover" class="modal hidden">
+        <div class="modal-content card" style="max-width: 350px;">
+            <h3>Recuperar Clave</h3>
+            <p class="muted" style="font-size: 12px;">Validar con el número del Administrador:</p>
+            <input id="recover-phone" type="tel" placeholder="1131552679">
+            <div id="recover-step-2" class="hidden">
+                <hr>
+                <input id="new-admin-pass" type="password" placeholder="Nueva contraseña Admin">
+            </div>
+            <div class="grid-btns">
+                <button id="btn-verify-phone" class="btn primary">Verificar</button>
+                <button id="btn-close-recover" class="btn danger">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
