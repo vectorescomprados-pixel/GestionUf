@@ -4,6 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
     <title>GestiónUF Pro</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icono.png">
+    <link rel="apple-touch-icon" href="icono.png">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -38,9 +46,9 @@
             
             <div class="grid-btns">
                 <button id="btn-logout" class="btn danger">Salir</button>
-                <button id="btn-manage-users" class="btn admin-only">Gestionar Cuentas</button>
-                <button id="btn-import" class="btn admin-only">Importar CSV</button>
-                <button id="btn-export" class="btn admin-only">Exportar CSV</button>
+                <button id="btn-manage-users" class="btn admin-only">Cuentas</button>
+                <button id="btn-import" class="btn admin-only">Importar</button>
+                <button id="btn-export" class="btn admin-only">Exportar</button>
             </div>
 
             <section class="search-section">
@@ -67,7 +75,6 @@
                 </div>
                 <div id="log-list"></div>
             </div>
-            
             <button id="btn-delete-db" class="btn danger admin-only" style="width:100%; margin-top:15px; font-size:10px; opacity:0.7">BORRAR BASE</button>
         </div>
     </div>
@@ -75,13 +82,11 @@
     <div id="modal-form" class="modal hidden">
         <div class="modal-content card">
             <h3>Datos UF</h3>
-            <div class="form-body">
-                <input id="f-uf" placeholder="Unidad Funcional">
-                <input id="f-prop" placeholder="Propietario">
-                <input id="f-telp" placeholder="Tel Propietario">
-                <input id="f-inq" placeholder="Inquilino">
-                <input id="f-teli" placeholder="Tel Inquilino">
-            </div>
+            <input id="f-uf" placeholder="Unidad Funcional">
+            <input id="f-prop" placeholder="Propietario">
+            <input id="f-telp" placeholder="Tel Propietario">
+            <input id="f-inq" placeholder="Inquilino">
+            <input id="f-teli" placeholder="Tel Inquilino">
             <div class="grid-btns">
                 <button id="btn-save" class="btn primary">Guardar</button>
                 <button id="btn-cancel" class="btn danger">Cancelar</button>
@@ -92,15 +97,11 @@
     <div id="modal-users-list" class="modal hidden">
         <div class="modal-content card" style="max-width:400px; width:90%">
             <h3>Cuentas</h3>
-            <div id="users-admin-list" style="max-height:180px; overflow-y:auto; margin-bottom:15px"></div>
+            <div id="users-admin-list"></div>
             <hr>
-            <h4>Nuevo Usuario</h4>
             <input id="u-name" placeholder="Nombre">
             <input id="u-pass" type="password" placeholder="Clave">
-            <select id="u-role">
-                <option value="user">Usuario Común</option>
-                <option value="admin">Administrador</option>
-            </select>
+            <select id="u-role"><option value="user">Usuario</option><option value="admin">Admin</option></select>
             <div class="grid-btns">
                 <button id="btn-save-user" class="btn primary">Crear</button>
                 <button id="btn-close-users" class="btn danger">Cerrar</button>
@@ -110,12 +111,10 @@
 
     <div id="modal-recover" class="modal hidden">
         <div class="modal-content card" style="max-width: 350px;">
-            <h3>Recuperar Clave</h3>
-            <p class="muted" style="font-size: 12px;">Validar con el número del Administrador:</p>
+            <h3>Validar Celular</h3>
             <input id="recover-phone" type="tel" placeholder="1131552679">
             <div id="recover-step-2" class="hidden">
-                <hr>
-                <input id="new-admin-pass" type="password" placeholder="Nueva contraseña Admin">
+                <input id="new-admin-pass" type="password" placeholder="Nueva Clave Admin">
             </div>
             <div class="grid-btns">
                 <button id="btn-verify-phone" class="btn primary">Verificar</button>
