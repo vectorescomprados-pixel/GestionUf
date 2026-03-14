@@ -1,15 +1,8 @@
-const CACHE_NAME = 'gestion-uf-v2';
-const ASSETS = [
-  'index.html',
-  'style.css',
-  'app.js',
-  'manifest.json',
-  'icono.png',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
-];
+const CACHE_NAME = 'uf-cache-v1';
+const ASSETS = ['./', 'index.html', 'style.css', 'app.js', 'manifest.json'];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
+  e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(ASSETS)));
 });
 
 self.addEventListener('fetch', (e) => {
