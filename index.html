@@ -1,57 +1,104 @@
-﻿<body class="dark-mode">
+﻿<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <title>GestiónUF Cloud</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dark-mode">
     <input type="file" id="csv-file" accept=".csv" style="display:none">
-    
-    <button id="btn-rocket" title="Volver arriba"><i class="fas fa-rocket"></i></button>
+    <button id="btn-rocket"><i class="fas fa-rocket"></i></button>
 
     <div class="wrap">
         <div class="top-controls">
             <div class="control-group">
-                <span>Ver Log</span>
                 <label class="switch"><input type="checkbox" id="log-toggle" checked><span class="slider"></span></label>
+                <span style="font-size:11px">LOG</span>
             </div>
-            <div id="sync-status" style="color: #22c55e; font-size: 11px; font-weight: bold;">● APP EN LÍNEA</div>
+            <div id="sync-status" style="color: #22c55e; font-size: 11px; font-weight: bold;">● EN LÍNEA</div>
             <div class="control-group">
-                <span>Modo Oscuro</span>
+                <span style="font-size:11px">OSCURO</span>
                 <label class="switch"><input type="checkbox" id="mode-toggle" checked><span class="slider"></span></label>
             </div>
         </div>
 
         <div id="login-screen" class="card">
-            <h1>GestiónUF Cloud</h1>
+            <h1 style="text-align:center">GestiónUF</h1>
             <input id="login-user" placeholder="Usuario">
             <input id="login-pass" type="password" placeholder="Contraseña">
             <button id="btn-login" class="btn primary" style="width:100%">Entrar</button>
-            <button id="btn-recover" class="btn ghost" style="width:100%; margin-top:10px;">Recuperar Admin</button>
+            <button id="btn-recover" class="btn" style="width:100%; margin-top:10px; background:none; color:var(--text-muted)">Recuperar Admin</button>
         </div>
 
-        <div id="main-screen" class="card hidden">
-            <div class="grid-btns">
-                <button id="btn-add" class="btn primary">+ Nueva UF</button>
-                <button id="btn-import" class="btn admin-only">Importar CSV</button>
-                <button id="btn-export" class="btn">Exportar</button>
-                <button id="btn-users" class="btn admin-only">Cuentas</button>
-                <button id="btn-logout" class="btn danger">Salir</button>
+        <div id="main-screen" class="hidden">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <p class="muted">Hola, <span id="current-user-display" style="font-weight:bold; color:var(--primary)"></span></p>
+                    <button id="btn-logout" class="btn danger" style="padding:4px 8px; font-size:11px">Salir</button>
+                </div>
+                <div class="grid-btns" style="margin-top:10px">
+                    <button id="btn-add" class="btn primary">+ Nueva UF</button>
+                    <button id="btn-import" class="btn admin-only">Importar</button>
+                    <button id="btn-export" class="btn">Exportar</button>
+                    <button id="btn-users" class="btn admin-only">Cuentas</button>
+                </div>
             </div>
 
-            <section class="search-section">
-                <div style="position:relative; margin-bottom: 8px;">
-                    <input id="search-text" placeholder="Buscar UF o Nombre...">
-                </div>
+            <section class="search-section card">
+                <input id="search-text" placeholder="Buscar UF, Nombre o Tel...">
                 <div class="grid-btns">
                     <button id="btn-search" class="btn primary">Buscar</button>
                     <button id="btn-clear" class="btn">Limpiar</button>
-                    <button id="btn-list-empty" class="btn warning-btn">Vacíos</button>
+                    <button id="btn-list-empty" class="btn warning-btn" style="grid-column: span 2">Ver Sin Teléfonos (Vacíos)</button>
                 </div>
             </section>
 
             <div id="list"></div>
 
             <div id="log-container" class="log-container">
-                <h4 class="muted">Actividad Reciente</h4>
+                <h4 class="muted" style="margin:0 0 5px 0">Actividad</h4>
                 <div id="log-list"></div>
             </div>
         </div>
     </div>
-    
+
+    <div id="modal-form" class="modal hidden">
+        <div class="modal-content card">
+            <h3>Datos Unidad</h3>
+            <input id="f-uf" placeholder="UF (ej: 0001)">
+            <input id="f-prop" placeholder="Propietario">
+            <input id="f-telp" placeholder="Tel Propietario">
+            <input id="f-inq" placeholder="Inquilino">
+            <input id="f-teli" placeholder="Tel Inquilino">
+            <div class="grid-btns">
+                <button id="btn-save" class="btn primary">Guardar</button>
+                <button id="btn-cancel" class="btn danger">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-users-list" class="modal hidden">
+        <div class="modal-content card">
+            <h3>Cuentas</h3>
+            <div id="users-admin-list"></div>
+            <hr>
+            <input id="u-name" placeholder="Usuario"><input id="u-pass" type="password" placeholder="Clave">
+            <select id="u-role" style="width:100%; padding:10px; border-radius:8px; margin-bottom:10px"><option value="user">Usuario</option><option value="admin">Admin</option></select>
+            <div class="grid-btns"><button id="btn-save-user" class="btn primary">Crear</button><button id="btn-close-users" class="btn danger">Cerrar</button></div>
+        </div>
+    </div>
+
+    <div id="modal-recover" class="modal hidden">
+        <div class="modal-content card">
+            <h3>Recuperar</h3>
+            <input id="recover-phone" placeholder="Celular Maestro">
+            <div id="recover-step-2" class="hidden"><input id="new-admin-pass" type="password" placeholder="Nueva Clave"></div>
+            <div class="grid-btns"><button id="btn-verify-phone" class="btn primary">Verificar</button><button id="btn-close-recover" class="btn danger">Cerrar</button></div>
+        </div>
+    </div>
+
     <script type="module" src="app.js"></script>
 </body>
+</html>

@@ -1,29 +1,56 @@
-/* Cabecera Fija */
+:root {
+    --bg: #f4f6f9; --card-bg: #ffffff; --text: #1e293b; --text-muted: #64748b;
+    --border: #cbd5e1; --input-bg: #ffffff; --primary: #2563eb; --danger: #ef4444; 
+    --whatsapp: #25d366; --restore: #0ea5e9; --warning: #eab308;
+}
+body.dark-mode {
+    --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --text-muted: #94a3b8;
+    --border: #334155; --input-bg: #0f172a;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+body { 
+    background-color: var(--bg); color: var(--text); 
+    font-family: -apple-system, system-ui, sans-serif; 
+    margin: 0; padding: 10px; display: flex; justify-content: center; 
+}
+.wrap { width: 100%; max-width: 500px; padding-bottom: 80px; }
+
+/* CABECERA FIJA */
+.top-controls { 
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px; background: var(--bg); position: sticky; top: 0; z-index: 1001;
+}
+
+.card { background: var(--card-bg); border-radius: 12px; padding: 15px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 15px; }
+
+/* SECCIÓN DE BOTONES FIJA */
 .search-section {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--card-bg);
-    padding: 10px 0;
-    border-bottom: 2px solid var(--primary);
+    position: sticky; top: 45px; z-index: 1000;
+    background: var(--card-bg); padding: 15px; border-radius: 12px;
+    border: 2px solid var(--primary); margin-bottom: 15px;
 }
 
-/* Botón Cohete */
-#btn-rocket {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-    cursor: pointer;
-    display: none; /* Se muestra con JS */
-    z-index: 1000;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+.grid-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.btn { 
+    padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px;
+    transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px;
 }
-
+.primary { background: var(--primary); color: white; }
+.danger { background: var(--danger); color: white; }
 .warning-btn { background: var(--warning); color: #000; }
+.btn:active { transform: scale(0.98); }
+
+/* LISTA */
+.item { background: var(--card-bg); border-radius: 10px; padding: 12px; margin-bottom: 10px; border-left: 4px solid var(--primary); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+
+/* BOTÓN COHETE */
+#btn-rocket {
+    position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: white;
+    border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 20px;
+    cursor: pointer; display: none; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.hidden { display: none !important; }
+.log-container { margin-top: 15px; padding: 10px; background: rgba(120,120,120,0.1); border-radius: 8px; font-size: 11px; max-height: 150px; overflow-y: auto; }
+input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); margin-bottom: 8px; }
