@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-    <title>GestiónUF Cloud Pro</title>
+    <title>GestiónUF Pro Cloud</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -23,59 +23,86 @@
         </div>
 
         <div id="login-screen" class="card">
-            <h1>GestiónUF Cloud</h1>
+            <h1>GestiónUF</h1>
             <input id="login-user" placeholder="Usuario">
             <input id="login-pass" type="password" placeholder="Contraseña">
-            <button id="btn-login" class="btn primary" style="width:100%">Entrar al Sistema</button>
+            <button id="btn-login" class="btn primary" style="width:100%">Entrar</button>
+            <button id="btn-recover" class="btn ghost" style="width:100%; margin-top:10px; font-size:12px; opacity:0.7">Recuperar Acceso Admin</button>
         </div>
 
         <div id="main-screen" class="card hidden">
             <header>
-                <h2>Panel Remoto</h2>
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <h2>Panel de Control</h2>
+                    <button id="btn-logout" class="btn danger" style="padding:5px 10px; font-size:12px">Salir</button>
+                </div>
                 <p class="muted">Sesión: <span id="current-user-display" style="font-weight:bold; color:var(--primary)"></span></p>
-                <div id="sync-indicator" style="font-size: 10px; color: #22c55e; text-align: center; margin-top: 5px;">● Sincronizado con la Nube</div>
             </header>
-            
+
             <div class="grid-btns">
-                <button id="btn-logout" class="btn danger">Salir</button>
+                <button id="btn-add" class="btn primary">+ Agregar UF</button>
                 <button id="btn-import" class="btn admin-only">Importar CSV</button>
-                <button id="btn-export" class="btn admin-only">Exportar</button>
+                <button id="btn-export" class="btn">Exportar</button>
+                <button id="btn-users" class="btn admin-only">Cuentas</button>
             </div>
 
             <section class="search-section">
-                <input id="search-text" placeholder="Buscar en la nube (UF o Nombre)...">
+                <input id="search-text" placeholder="Buscar por UF, Propietario o Inquilino...">
                 <div class="grid-btns">
                     <button id="btn-search" class="btn primary">Buscar</button>
                     <button id="btn-list" class="btn">Ver Todos</button>
                 </div>
             </section>
 
-            <button id="btn-add" class="btn primary" style="margin: 10px 0; width:100%">+ AGREGAR A LA NUBE</button>
-
             <div id="list"></div>
 
             <div id="log-container" class="log-container">
-                <h4 class="muted">Actividad Global (Hoy)</h4>
+                <h4 class="muted" style="margin:0 0 8px 0; font-size:12px">Actividad Reciente</h4>
                 <div id="log-list"></div>
-            </div>
-
-            <div class="admin-only" style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px">
-                <button id="btn-delete-db" class="btn danger" style="width:100%">BORRAR TODA LA NUBE</button>
             </div>
         </div>
     </div>
 
     <div id="modal-form" class="modal hidden">
         <div class="modal-content card">
-            <h3>Datos de Unidad</h3>
-            <input id="f-uf" placeholder="Unidad Funcional">
+            <h3 id="modal-title">Datos de Unidad</h3>
+            <input id="f-uf" placeholder="UF (ej: 0001)">
             <input id="f-prop" placeholder="Propietario">
-            <input id="f-telp" placeholder="Tel Propietario">
+            <input id="f-telp" placeholder="Teléfono Propietario">
             <input id="f-inq" placeholder="Inquilino">
-            <input id="f-teli" placeholder="Tel Inquilino">
+            <input id="f-teli" placeholder="Teléfono Inquilino">
             <div class="grid-btns">
-                <button id="btn-save" class="btn primary">Guardar en Nube</button>
+                <button id="btn-save" class="btn primary">Guardar</button>
                 <button id="btn-cancel" class="btn danger">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-users-list" class="modal hidden">
+        <div class="modal-content card" style="max-width:400px; width:90%">
+            <h3>Gestión de Cuentas</h3>
+            <div id="users-admin-list" style="max-height:150px; overflow-y:auto; margin-bottom:10px"></div>
+            <hr>
+            <input id="u-name" placeholder="Nuevo Usuario">
+            <input id="u-pass" type="password" placeholder="Nueva Clave">
+            <select id="u-role"><option value="user">Usuario</option><option value="admin">Admin</option></select>
+            <div class="grid-btns">
+                <button id="btn-save-user" class="btn primary">Crear</button>
+                <button id="btn-close-users" class="btn danger">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-recover" class="modal hidden">
+        <div class="modal-content card" style="max-width: 350px;">
+            <h3>Recuperar Admin</h3>
+            <input id="recover-phone" type="tel" placeholder="Celular Maestro">
+            <div id="recover-step-2" class="hidden">
+                <input id="new-admin-pass" type="password" placeholder="Nueva Clave Admin">
+            </div>
+            <div class="grid-btns">
+                <button id="btn-verify-phone" class="btn primary">Verificar</button>
+                <button id="btn-close-recover" class="btn danger">Cerrar</button>
             </div>
         </div>
     </div>
