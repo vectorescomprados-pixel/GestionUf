@@ -12,53 +12,63 @@
     <button id="btn-rocket"><i class="fas fa-rocket"></i></button>
 
     <div class="wrap">
-        <div id="login-screen" class="card" style="margin-top: 50px;">
+        <div id="login-screen" class="card" style="margin-top:50px">
             <h1 style="text-align:center">GestiónUF</h1>
-            <input id="login-user" type="text" placeholder="Usuario" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid var(--border); background:var(--input-bg); color:white;">
-            <input id="login-pass" type="password" placeholder="Contraseña" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:1px solid var(--border); background:var(--input-bg); color:white;">
+            <input id="login-user" placeholder="Usuario">
+            <input id="login-pass" type="password" placeholder="Contraseña">
             <button id="btn-login" class="btn primary" style="width:100%">ENTRAR</button>
-            <button id="btn-recover" class="btn ghost" style="width:100%; margin-top:10px;">Olvidé mi contraseña</button>
+            <button id="btn-recover" class="btn ghost" style="width:100%; margin-top:10px;">Recuperar Contraseña</button>
         </div>
 
         <div id="main-screen" class="hidden">
             <div class="main-header">
-                <div id="sync-status">● APP CONECTADA A LA NUBE</div>
-                
-                <div class="card" style="padding: 10px; margin-bottom: 8px;">
-                    <div class="grid-btns">
-                        <button id="btn-add" class="btn primary"><i class="fas fa-plus"></i> NUEVA UF</button>
-                        <button id="btn-import" class="btn ghost admin-only"><i class="fas fa-upload"></i> IMPORTAR</button>
-                        <button id="btn-users" class="btn ghost admin-only"><i class="fas fa-users"></i> CUENTAS</button>
-                        <button id="btn-logout" class="btn danger"><i class="fas fa-sign-out-alt"></i></button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                    <div class="control-group">
+                        <label class="switch"><input type="checkbox" id="log-toggle" checked><span class="slider"></span></label>
+                        <span>LOG</span>
+                    </div>
+                    <div id="sync-status"><span class="dot"></span> APP EN LÍNEA</div>
+                    <div class="control-group">
+                        <span>DARK</span>
+                        <label class="switch"><input type="checkbox" id="mode-toggle" checked><span class="slider"></span></label>
                     </div>
                 </div>
 
-                <div class="card" style="padding: 10px; margin-bottom: 0;">
-                    <input id="search-text" type="text" placeholder="Buscar por UF o Nombre..." style="width:100%; padding:12px; margin-bottom:8px; border-radius:8px; border:1px solid var(--border); background:var(--input-bg); color:white;">
+                <div class="grid-btns" style="margin-bottom:8px">
+                    <button id="btn-add" class="btn primary">+ NUEVA UF</button>
+                    <button id="btn-import" class="btn ghost admin-only">IMPORTAR</button>
+                    <button id="btn-users" class="btn ghost admin-only">CUENTAS</button>
+                    <button id="btn-logout" class="btn danger"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+
+                <div class="card" style="padding:10px; margin-bottom:0">
+                    <input id="search-text" placeholder="Buscar UF o Nombre...">
                     <div class="grid-btns">
                         <button id="btn-search" class="btn primary">BUSCAR</button>
-                        <button id="btn-clear" class="btn ghost">LIMPIAR / TODO</button>
+                        <button id="btn-clear" class="btn ghost">VER TODO / LIMPIAR</button>
+                        <button id="btn-list-empty" class="btn warning-btn" style="grid-column: span 2">LISTAR VACÍOS</button>
                     </div>
                 </div>
             </div>
 
-            <div id="list"></div>
-            
-            <div id="log-container" class="card" style="font-size: 11px; opacity: 0.8; height: 120px; overflow-y: auto;">
-                <h4 style="margin:0 0 5px 0">Actividad Reciente</h4>
-                <div id="log-list"></div>
+            <div class="content-body">
+                <div id="list"></div>
+                <div id="log-container" class="card" style="font-size:11px; max-height:150px; overflow-y:auto">
+                    <h4 style="margin:0 0 5px 0">Actividad Reciente</h4>
+                    <div id="log-list"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="modal-form" class="modal hidden">
-        <div class="modal-content card" style="width: 90%; max-width: 400px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3000;">
-            <h3 id="modal-title">Datos de Unidad</h3>
-            <input id="f-uf" placeholder="UF (ej: 0001)" style="width:100%; padding:10px; margin-bottom:10px;">
-            <input id="f-prop" placeholder="Propietario" style="width:100%; padding:10px; margin-bottom:10px;">
-            <input id="f-telp" placeholder="Tel Propietario" style="width:100%; padding:10px; margin-bottom:10px;">
-            <input id="f-inq" placeholder="Inquilino" style="width:100%; padding:10px; margin-bottom:10px;">
-            <input id="f-teli" placeholder="Tel Inquilino" style="width:100%; padding:10px; margin-bottom:15px;">
+        <div class="card" style="width:90%; max-width:400px">
+            <h3>Datos de Unidad</h3>
+            <input id="f-uf" placeholder="UF (ej: 0001)">
+            <input id="f-prop" placeholder="Propietario">
+            <input id="f-telp" placeholder="Tel Propietario">
+            <input id="f-inq" placeholder="Inquilino">
+            <input id="f-teli" placeholder="Tel Inquilino">
             <div class="grid-btns">
                 <button id="btn-save" class="btn primary">GUARDAR</button>
                 <button id="btn-cancel" class="btn danger">CANCELAR</button>
@@ -66,12 +76,30 @@
         </div>
     </div>
 
-    <div id="modal-recover" class="modal hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:4000; display:flex; align-items:center; justify-content:center;">
-        <div class="card" style="width:80%;">
-            <h3>Validar Maestro</h3>
+    <div id="modal-users-list" class="modal hidden">
+        <div class="card" style="width:90%; max-width:400px">
+            <h3>Cuentas</h3>
+            <div id="users-admin-list" style="margin-bottom:10px"></div>
+            <input id="u-name" placeholder="Nuevo Usuario">
+            <input id="u-pass" type="password" placeholder="Clave">
+            <div class="grid-btns">
+                <button id="btn-save-user" class="btn primary">CREAR</button>
+                <button id="btn-close-users" class="btn danger">CERRAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-recover" class="modal hidden">
+        <div class="card" style="width:90%; max-width:350px">
+            <h3>Recuperar Admin</h3>
             <input id="recover-phone" placeholder="Celular Maestro">
-            <div id="recover-step-2" class="hidden"><input id="new-admin-pass" type="password" placeholder="Nueva Clave"></div>
-            <div class="grid-btns"><button id="btn-verify-phone" class="btn primary">Verificar</button><button id="btn-close-recover" class="btn danger">X</button></div>
+            <div id="recover-step-2" class="hidden">
+                <input id="new-admin-pass" type="password" placeholder="Nueva Clave">
+            </div>
+            <div class="grid-btns">
+                <button id="btn-verify-phone" class="btn primary">VERIFICAR</button>
+                <button id="btn-close-recover" class="btn danger">CERRAR</button>
+            </div>
         </div>
     </div>
 
