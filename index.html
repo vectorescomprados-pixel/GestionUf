@@ -8,11 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="dark-mode">
-    <button id="btn-rocket" class="hidden"><i class="fas fa-rocket"></i></button>
     <input type="file" id="csv-file" accept=".csv" class="hidden">
 
-    <div id="login-screen" class="modal">
-        <div class="modal-content" style="text-align:center">
+    <div id="login-screen" style="position:fixed; inset:0; background:var(--bg); z-index:9999; display:flex; align-items:center; justify-content:center">
+        <div class="wrap" style="text-align:center; background:var(--card); padding:30px; border-radius:20px">
             <h2>GestiónUF</h2>
             <input id="login-user" placeholder="Usuario">
             <input id="login-pass" type="password" placeholder="Contraseña">
@@ -21,35 +20,37 @@
     </div>
 
     <div id="main-screen" class="hidden">
-        <div class="main-header">
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px">
-                <button id="btn-log-toggle" class="btn ghost" style="width:60px">LOG</button>
-                <button id="btn-theme" class="btn ghost" style="width:60px">MODO</button>
-                <button id="btn-logout" class="btn danger" style="width:60px">SALIR</button>
+        <div class="wrap">
+            <div class="main-header">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px">
+                    <button id="btn-log-toggle" class="btn ghost">LOG</button>
+                    <button id="btn-theme" class="btn ghost">MODO</button>
+                    <button id="btn-logout" class="btn danger">SALIR</button>
+                </div>
+                <div class="grid-btns">
+                    <button id="btn-add" class="btn primary">NUEVA UF</button>
+                    <button id="btn-import" class="btn ghost">IMPORTAR</button>
+                    <button id="btn-export" class="btn ghost">EXPORTAR</button>
+                </div>
+                <input id="search-input" placeholder="Buscar por UF o Propietario...">
+                <div class="grid-btns">
+                    <button id="btn-search" class="btn primary">BUSCAR</button>
+                    <button id="btn-clear" class="btn ghost">LIMPIAR</button>
+                    <button id="btn-filter-empty" class="btn" style="background:var(--warning); color:black">VACÍOS</button>
+                </div>
+                <button id="btn-delete-all" class="btn danger" style="width:100%">BORRAR BASE DE DATOS</button>
             </div>
-            <div class="grid-btns">
-                <button id="btn-add" class="btn primary">NUEVA UF</button>
-                <button id="btn-import" class="btn ghost">IMPORTAR</button>
-                <button id="btn-export" class="btn ghost">EXPORTAR</button>
-                <button id="btn-delete-all" class="btn danger" style="grid-column: span 3">BORRAR BASE DE DATOS</button>
-            </div>
-            <input id="search-input" placeholder="Buscar por UF, Propietario...">
-            <div class="grid-btns">
-                <button id="btn-search" class="btn primary" style="grid-column: span 2">BUSCAR</button>
-                <button id="btn-clear" class="btn ghost">VER TODO</button>
-            </div>
-            <button id="btn-filter-empty" class="btn" style="background:#f59e0b; color:black; width:100%; font-weight:bold">VER REGISTROS SIN TELÉFONO</button>
-        </div>
 
-        <div class="content-body">
-            <div id="log-panel" class="hidden" style="background:#000; color:#0f0; padding:10px; font-size:10px; border-radius:8px; margin-bottom:15px; height:80px; overflow:auto"></div>
-            <div id="list"></div>
+            <div class="content-body">
+                <div id="log-panel" class="hidden"></div>
+                <div id="list"></div>
+            </div>
         </div>
     </div>
 
-    <div id="modal-form" class="modal hidden">
-        <div class="modal-content">
-            <h3 id="form-title">Nueva Unidad</h3>
+    <div id="modal-form" class="modal hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:10000; display:flex; align-items:center; justify-content:center">
+        <div class="wrap" style="background:var(--card); padding:20px; border-radius:15px">
+            <h3>Ficha UF</h3>
             <input id="f-uf" placeholder="UF">
             <input id="f-prop" placeholder="Propietario">
             <input id="f-telp" placeholder="Tel Propietario">
