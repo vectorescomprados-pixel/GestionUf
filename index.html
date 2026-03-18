@@ -3,58 +3,52 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-    <title>GestiónUF Cloud</title>
+    <title>GestiónUF App</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="dark-mode">
     <input type="file" id="csv-file" accept=".csv" style="display:none">
-    <button id="btn-rocket"><i class="fas fa-rocket"></i></button>
 
     <div class="wrap">
-        <div id="login-screen" class="card" style="margin-top:50px">
-            <h1 style="text-align:center">GestiónUF</h1>
+        <div id="login-screen" class="card" style="margin: 100px 20px; padding: 30px; border-radius: 20px;">
+            <h1 style="text-align:center; margin-bottom:30px">GestiónUF</h1>
             <input id="login-user" placeholder="Usuario">
             <input id="login-pass" type="password" placeholder="Contraseña">
-            <button id="btn-login" class="btn primary" style="width:100%">ENTRAR</button>
-            <button id="btn-recover" class="btn ghost" style="width:100%; margin-top:10px;">Recuperar Contraseña</button>
+            <button id="btn-login" class="btn primary" style="width:100%; font-size:18px">ENTRAR</button>
         </div>
 
         <div id="main-screen" class="hidden">
             <div class="main-header">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                    <div class="control-group">
-                        <label class="switch"><input type="checkbox" id="log-toggle" checked><span class="slider"></span></label>
-                        <span>LOG</span>
-                    </div>
-                    <div id="sync-status"><span class="dot"></span> APP EN LÍNEA</div>
-                    <div class="control-group">
-                        <span>DARK</span>
-                        <label class="switch"><input type="checkbox" id="mode-toggle" checked><span class="slider"></span></label>
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px">
+                    <span id="sync-status" style="color:var(--success); font-weight:bold">● ONLINE</span>
+                    <div style="display:flex; gap:15px">
+                        <span>LOG <input type="checkbox" id="log-toggle" checked></span>
+                        <span>DARK <input type="checkbox" id="mode-toggle" checked></span>
                     </div>
                 </div>
 
-                <div class="grid-btns" style="margin-bottom:8px">
-                    <button id="btn-add" class="btn primary">+ NUEVA UF</button>
-                    <button id="btn-import" class="btn ghost admin-only">IMPORTAR</button>
-                    <button id="btn-users" class="btn ghost admin-only">CUENTAS</button>
-                    <button id="btn-logout" class="btn danger"><i class="fas fa-sign-out-alt"></i></button>
+                <div class="grid-btns">
+                    <button id="btn-add" class="btn primary"><i class="fas fa-plus"></i> UF</button>
+                    <button id="btn-import" class="btn ghost admin-only"><i class="fas fa-file-import"></i></button>
+                    <button id="btn-export" class="btn ghost"><i class="fas fa-file-export"></i></button>
+                    <button id="btn-users" class="btn ghost admin-only"><i class="fas fa-users-cog"></i></button>
+                    <button id="btn-delete-all" class="btn danger admin-only"><i class="fas fa-trash-alt"></i></button>
+                    <button id="btn-logout" class="btn danger"><i class="fas fa-power-off"></i></button>
                 </div>
 
-                <div class="card" style="padding:10px; margin-bottom:0">
-                    <input id="search-text" placeholder="Buscar UF o Nombre...">
-                    <div class="grid-btns">
-                        <button id="btn-search" class="btn primary">BUSCAR</button>
-                        <button id="btn-clear" class="btn ghost">VER TODO / LIMPIAR</button>
-                        <button id="btn-list-empty" class="btn warning-btn" style="grid-column: span 2">LISTAR VACÍOS</button>
-                    </div>
+                <input id="search-text" placeholder="Buscar UF, nombre o inquilino..." style="margin-bottom:5px">
+                <div class="grid-btns">
+                    <button id="btn-search" class="btn primary">BUSCAR</button>
+                    <button id="btn-clear" class="btn ghost">TODOS</button>
                 </div>
+                <button id="btn-list-empty" class="btn warning-btn">LISTAR SIN TELÉFONOS</button>
             </div>
 
             <div class="content-body">
                 <div id="list"></div>
-                <div id="log-container" class="card" style="font-size:11px; max-height:150px; overflow-y:auto">
-                    <h4 style="margin:0 0 5px 0">Actividad Reciente</h4>
+                <div id="log-container" style="font-size:11px; margin-top:20px; border-top:1px solid var(--border); padding:10px">
+                    <b>LOG DE ACTIVIDAD:</b>
                     <div id="log-list"></div>
                 </div>
             </div>
@@ -62,43 +56,30 @@
     </div>
 
     <div id="modal-form" class="modal hidden">
-        <div class="card" style="width:90%; max-width:400px">
-            <h3>Datos de Unidad</h3>
-            <input id="f-uf" placeholder="UF (ej: 0001)">
+        <div style="background:var(--card-bg); width:100%; padding:20px; border-radius:20px">
+            <h2 id="modal-title">Ficha de Unidad</h2>
+            <input id="f-uf" placeholder="UF">
             <input id="f-prop" placeholder="Propietario">
-            <input id="f-telp" placeholder="Tel Propietario">
+            <input id="f-telp" placeholder="Teléfono Propietario">
             <input id="f-inq" placeholder="Inquilino">
-            <input id="f-teli" placeholder="Tel Inquilino">
-            <div class="grid-btns">
+            <input id="f-teli" placeholder="Teléfono Inquilino">
+            <div class="grid-btns" style="margin-top:15px">
                 <button id="btn-save" class="btn primary">GUARDAR</button>
                 <button id="btn-cancel" class="btn danger">CANCELAR</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-users-list" class="modal hidden">
-        <div class="card" style="width:90%; max-width:400px">
-            <h3>Cuentas</h3>
-            <div id="users-admin-list" style="margin-bottom:10px"></div>
-            <input id="u-name" placeholder="Nuevo Usuario">
+    <div id="modal-users" class="modal hidden">
+        <div style="background:var(--card-bg); width:100%; padding:20px; border-radius:20px">
+            <h3>Gestión de Usuarios</h3>
+            <div id="users-admin-list" style="margin-bottom:15px"></div>
+            <input id="u-name" placeholder="Usuario">
             <input id="u-pass" type="password" placeholder="Clave">
+            <select id="u-role"><option value="user">Usuario Estándar</option><option value="admin">Administrador</option></select>
             <div class="grid-btns">
                 <button id="btn-save-user" class="btn primary">CREAR</button>
                 <button id="btn-close-users" class="btn danger">CERRAR</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-recover" class="modal hidden">
-        <div class="card" style="width:90%; max-width:350px">
-            <h3>Recuperar Admin</h3>
-            <input id="recover-phone" placeholder="Celular Maestro">
-            <div id="recover-step-2" class="hidden">
-                <input id="new-admin-pass" type="password" placeholder="Nueva Clave">
-            </div>
-            <div class="grid-btns">
-                <button id="btn-verify-phone" class="btn primary">VERIFICAR</button>
-                <button id="btn-close-recover" class="btn danger">CERRAR</button>
             </div>
         </div>
     </div>
