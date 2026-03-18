@@ -2,61 +2,66 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-    <title>GestiónUF Android</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>GestiónUF</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="dark-mode">
-    <div class="wrap">
-        <div id="login-screen" class="modal">
-            <div class="modal-content">
-                <h1 style="text-align:center">GestiónUF</h1>
-                <input id="login-user" placeholder="Usuario">
-                <input id="login-pass" type="password" placeholder="Contraseña">
-                <button id="btn-login" class="btn primary" style="width:100%">INGRESAR</button>
+    <input type="file" id="csv-file" accept=".csv" style="display:none">
+
+    <div id="login-screen" class="modal">
+        <div class="modal-content">
+            <h2 style="text-align:center">GestiónUF</h2>
+            <input id="login-user" placeholder="Usuario">
+            <input id="login-pass" type="password" placeholder="Contraseña">
+            <button id="btn-login" class="btn primary" style="width:100%">ENTRAR</button>
+            <button id="btn-open-recover" class="btn btn-small ghost" style="width:100%; margin-top:10px">RECUPERAR CLAVE</button>
+        </div>
+    </div>
+
+    <div id="main-screen" class="hidden">
+        <div class="main-header">
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <div style="display:flex; gap:5px">
+                    <button id="btn-show-log" class="btn btn-small ghost">LOG</button>
+                    <button id="btn-dark-mode" class="btn btn-small ghost">MODO</button>
+                </div>
+                <span style="font-size:10px; color:var(--success)">● NUBE ACTIVA</span>
             </div>
+
+            <div class="grid-btns">
+                <button id="btn-add" class="btn primary"><i class="fas fa-plus"></i> NUEVA UF</button>
+                <button id="btn-import" class="btn ghost admin-only"><i class="fas fa-upload"></i> SUBIR</button>
+                <button id="btn-export" class="btn ghost"><i class="fas fa-download"></i> BAJAR</button>
+                <button id="btn-users" class="btn ghost admin-only"><i class="fas fa-user-gear"></i> CUENTAS</button>
+                <button id="btn-delete-all" class="btn danger admin-only"><i class="fas fa-trash-can"></i> BASE</button>
+                <button id="btn-logout" class="btn danger"><i class="fas fa-power-off"></i> SALIR</button>
+            </div>
+
+            <input id="search-text" placeholder="Buscar UF o Nombre..." style="margin-top:10px">
+            <div class="grid-btns">
+                <button id="btn-search" class="btn primary">BUSCAR</button>
+                <button id="btn-clear" class="btn ghost">VER TODO</button>
+            </div>
+            <button id="btn-list-empty" class="btn warning" style="width:100%; margin-top:8px">LISTAR REGISTROS VACÍOS</button>
         </div>
 
-        <div id="main-screen" class="hidden">
-            <div class="main-header">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px">
-                    <span style="color:#25d366">● ONLINE</span>
-                    <div>
-                        DARK <input type="checkbox" id="mode-toggle" checked>
-                        LOG <input type="checkbox" id="log-toggle" checked>
-                    </div>
-                </div>
-                <div class="grid-btns">
-                    <button id="btn-add" class="btn primary"><i class="fas fa-plus"></i> UF</button>
-                    <button id="btn-import" class="btn ghost admin-only"><i class="fas fa-file-upload"></i></button>
-                    <button id="btn-export" class="btn ghost"><i class="fas fa-file-download"></i></button>
-                    <button id="btn-users" class="btn ghost admin-only"><i class="fas fa-users-cog"></i></button>
-                    <button id="btn-delete-all" class="btn danger admin-only"><i class="fas fa-bomb"></i></button>
-                    <button id="btn-logout" class="btn danger"><i class="fas fa-power-off"></i></button>
-                </div>
-                <input id="search-text" placeholder="Buscar UF, nombre...">
-                <div class="grid-btns">
-                    <button id="btn-search" class="btn primary" style="grid-column: span 2">BUSCAR</button>
-                    <button id="btn-clear" class="btn ghost">LIMPIAR</button>
-                </div>
-                <button id="btn-list-empty" class="btn warning-btn" style="background:#f59e0b; width:100%; border-radius:8px; height:35px; color:black; font-weight:bold; margin-top:5px">VER SIN CONTACTO</button>
-            </div>
+        <div id="list"></div>
 
-            <div class="content-body">
-                <div id="list"></div>
-                <div id="log-container" style="font-size:11px; margin-top:30px; border-top:1px solid var(--border)">
-                    <p><b>HISTORIAL:</b></p>
-                    <div id="log-list"></div>
-                </div>
+        <div id="log-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Historial de Actividad</h3>
+                <div id="log-list" style="max-height:300px; overflow-y:auto; font-size:11px"></div>
+                <button id="btn-close-log" class="btn danger" style="width:100%; margin-top:10px">CERRAR</button>
             </div>
         </div>
     </div>
 
     <div id="modal-form" class="modal hidden">
         <div class="modal-content">
-            <h3>Ficha de Unidad</h3>
-            <input id="f-uf" placeholder="Número UF">
+            <h3>Datos de Unidad</h3>
+            <input id="f-uf" placeholder="UF">
             <input id="f-prop" placeholder="Propietario">
             <input id="f-telp" placeholder="Tel Propietario">
             <input id="f-inq" placeholder="Inquilino">
@@ -70,15 +75,24 @@
 
     <div id="modal-users" class="modal hidden">
         <div class="modal-content">
-            <h3>Cuentas de Acceso</h3>
-            <div id="users-admin-list" style="max-height:100px; overflow:auto; margin-bottom:10px; font-size:12px"></div>
+            <h3>Gestión de Cuentas</h3>
+            <div id="users-admin-list"></div>
             <input id="u-name" placeholder="Usuario">
-            <input id="u-pass" type="password" placeholder="Contraseña">
+            <input id="u-pass" type="password" placeholder="Clave">
             <select id="u-role"><option value="user">Usuario</option><option value="admin">Admin</option></select>
             <div class="grid-btns">
                 <button id="btn-save-user" class="btn primary">CREAR</button>
                 <button id="btn-close-users" class="btn danger">CERRAR</button>
             </div>
+        </div>
+    </div>
+
+    <div id="modal-recover" class="modal hidden">
+        <div class="modal-content">
+            <h3>Recuperar Admin</h3>
+            <input id="recover-phone" placeholder="Celular Maestro">
+            <button id="btn-verify-recover" class="btn primary" style="width:100%">VERIFICAR</button>
+            <button id="btn-close-recover" class="btn danger" style="width:100%; margin-top:10px">CANCELAR</button>
         </div>
     </div>
 
