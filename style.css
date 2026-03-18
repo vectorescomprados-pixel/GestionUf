@@ -1,44 +1,52 @@
-/* DISEÑO BASE REFORZADO */
-.wrap { width: 100%; max-width: 500px; margin: auto; position: relative; }
-
-/* CABECERA FIJA PARA NO PERDER BOTONES */
-.sticky-header {
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 1000;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--primary);
+:root {
+    --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; --text-muted: #94a3b8;
+    --border: #334155; --input-bg: #0f172a; --primary: #2563eb; --danger: #ef4444; 
+    --warning: #eab308; --success: #22c55e;
 }
 
-.item {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 12px;
-    border: 1px solid var(--border);
-    transition: 0.3s;
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { 
+    background-color: var(--bg); color: var(--text); 
+    font-family: -apple-system, system-ui, sans-serif; 
+    margin: 0; display: flex; justify-content: center; 
 }
 
-/* EFECTO DE LÍNEA EN VERDE PARA APP ONLINE */
-#sync-status {
-    padding: 4px 10px;
-    border-radius: 20px;
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid #22c55e;
+.wrap { width: 100%; max-width: 500px; padding: 10px; }
+
+/* CABECERA FIJA: Esto es lo que sugerí */
+.main-header {
+    position: sticky; top: 0; z-index: 1000;
+    background: var(--bg); padding-bottom: 10px;
 }
 
-/* BOTÓN COHETE ESTILIZADO */
+.card { background: var(--card-bg); border-radius: 12px; padding: 15px; border: 1px solid var(--border); margin-bottom: 12px; }
+
+.grid-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.btn { 
+    padding: 12px; border-radius: 8px; border: none; cursor: pointer; 
+    font-weight: 600; font-size: 13px; transition: 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.primary { background: var(--primary); color: white; }
+.danger { background: var(--danger); color: white; }
+.ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+
+/* LISTADO */
+#list { margin-top: 5px; }
+.item { 
+    background: var(--card-bg); border-radius: 10px; padding: 12px; 
+    margin-bottom: 10px; border-left: 5px solid var(--primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.item.empty { border-left-color: var(--warning); }
+
+/* BOTÓN COHETE */
 #btn-rocket {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    display: none;
-    z-index: 9999;
+    position: fixed; bottom: 20px; right: 20px; 
+    width: 45px; height: 45px; border-radius: 50%;
+    background: var(--primary); color: white; border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: none; z-index: 2000;
 }
+
+#sync-status { font-size: 10px; text-align: center; margin-bottom: 5px; color: var(--success); }
+.hidden { display: none !important; }
