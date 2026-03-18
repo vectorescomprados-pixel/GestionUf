@@ -1,19 +1,26 @@
-﻿<div class="grid-btns">
-    <button id="btn-search" class="btn primary">BUSCAR</button>
-    <button id="btn-clear" class="btn ghost">VER TODO</button> <button id="btn-filter-empty" class="btn" style="background:var(--warning); color:black">VACÍOS</button>
+﻿<div id="login-screen" class="modal">
+    <div class="modal-content">
+        <h2 style="color:var(--primary)">GestiónUF</h2>
+        <input id="login-user" placeholder="Usuario">
+        <input id="login-pass" type="password" placeholder="Contraseña">
+        <button id="btn-login" class="btn primary" style="width:100%">ENTRAR</button>
+        <button id="btn-recover-open" class="btn ghost" style="width:100%; margin-top:10px; font-size:10px">OLVIDÉ MI CONTRASEÑA</button>
+    </div>
 </div>
 
-<div id="modal-recover" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10002; display:flex; align-items:center; justify-content:center">
-    <div class="wrap" style="background:var(--card); padding:25px; border-radius:15px; text-align:center">
+<div id="modal-recover" class="modal hidden">
+    <div class="modal-content">
         <h3>Recuperar Acceso</h3>
-        <p style="font-size:12px; margin-bottom:15px">Ingrese su número de teléfono registrado para validar su identidad</p>
-        <input id="rec-tel" placeholder="Número de Teléfono (sin espacios)">
-        <div id="step-new-pass" class="hidden">
-            <input id="new-pass" type="password" placeholder="Nueva Contraseña">
+        <div id="step-1">
+            <p style="font-size:12px">Ingrese teléfono registrado:</p>
+            <input id="rec-tel" type="tel" placeholder="Ej: 1122334455">
+            <button id="btn-verify-tel" class="btn primary" style="width:100%">VERIFICAR</button>
         </div>
-        <div class="grid-btns">
-            <button id="btn-rec-verify" class="btn primary">VERIFICAR</button>
-            <button id="btn-rec-cancel" class="btn danger">CANCELAR</button>
+        <div id="step-2" class="hidden">
+            <p style="font-size:12px">Nueva contraseña:</p>
+            <input id="new-pass" type="password" placeholder="Mínimo 4 caracteres">
+            <button id="btn-save-pass" class="btn primary" style="width:100%">CAMBIAR CLAVE</button>
         </div>
+        <button id="btn-close-rec" class="btn danger" style="width:100%; margin-top:10px">CANCELAR</button>
     </div>
 </div>

@@ -1,27 +1,61 @@
-/* ... (Mantener todo lo anterior igual y solo ajustar/agregar esto) ... */
+:root {
+    --bg: #f0f2f5; --card: #ffffff; --primary: #2563eb; 
+    --danger: #e11d48; --text: #1f293b; --border: #e5e7eb; --warning: #f59e0b;
+}
+body.dark-mode {
+    --bg: #0b141a; --card: #111b21; --text: #e9edef; --border: #222d34;
+}
 
-.wrap { width: 450px; min-width: 450px; padding: 0 10px; margin: auto; }
+* { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+body { background: var(--bg); color: var(--text); margin: 0; display: flex; justify-content: center; }
 
-/* COHETE DESPLAZADO A LA DERECHA DEL CONTENEDOR */
+/* AJUSTE ANDROID: Ancho adaptable pero con tope en 450px */
+.wrap { 
+    width: 95%; 
+    max-width: 450px; 
+    padding: 0 5px; 
+    margin: auto; 
+}
+
+.main-header {
+    position: fixed; top: 0; 
+    width: 95%; 
+    max-width: 450px; 
+    background: var(--card); z-index: 1000; padding: 15px; 
+    border-bottom: 2px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.content-body { margin-top: 320px; width: 100%; }
+
+/* COHETE POSICIONADO PARA NO TAPAR */
 #btn-rocket {
-    position: fixed; 
-    bottom: 20px; 
-    left: calc(50% + 230px); /* Se mueve fuera de los 450px del centro */
-    width: 50px; height: 50px;
+    position: fixed; bottom: 20px; right: 15px; 
+    width: 45px; height: 45px;
     background: var(--primary); color: white; border-radius: 50%; border: none; 
-    cursor: pointer; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* ALINEACIÓN DE CARTELES/MODALES */
-.modal-content-center {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.item { 
+    background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 15px;
+    border: 1px solid var(--border); width: 100%;
+}
+.item.no-phone { border: 2px solid var(--warning); background: rgba(245, 158, 11, 0.05); }
+
+/* ESTILO DE MODALES CENTRADOS */
+.modal { 
+    position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
+    z-index: 10000; display: flex; align-items: center; justify-content: center; 
+}
+.modal-content { 
+    background: var(--card); padding: 25px; border-radius: 20px; 
+    width: 90%; max-width: 380px; text-align: center; 
 }
 
-/* RESPONSIVE PARA MÓVILES (Si la pantalla es chica, el cohete no tapa tanto) */
-@media (max-width: 600px) {
-    #btn-rocket { left: auto; right: 10px; width: 40px; height: 40px; }
-}
+.grid-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+.btn { height: 40px; border-radius: 8px; border: none; font-weight: bold; font-size: 11px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.primary { background: var(--primary); }
+.danger { background: var(--danger); }
+.ghost { background: #6b7280; }
+
+.hidden { display: none !important; }
+input { width: 100%; height: 40px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--border); padding: 0 12px; background: var(--bg); color: var(--text); }
