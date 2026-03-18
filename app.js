@@ -14,68 +14,64 @@ document.addEventListener("DOMContentLoaded", () => {
     let departamentos = [];
     let editId = null;
 
-    // --- LOGIN ---
-    const login = () => {
-        const u = document.getElementById("login-user").value;
-        const p = document.getElementById("login-pass").value;
-        if(u === "admin" && p === "admin") {
-            localStorage.setItem("session_uf", "active");
-            location.reload();
-        } else { alert("Error de acceso"); }
+    // --- SEGURIDAD ---
+    const checkPass = () => {
+        const p = prompt("SEGURIDAD: Ingrese clave de administrador para confirmar acción:");
+        return p === "admin"; // Cambia "admin" por tu clave real
     };
 
-    document.getElementById("btn-login").onclick = login;
-    document.getElementById("login-pass").onkeypress = (e) => { if(e.key === "Enter") login(); };
-    document.getElementById("btn-recover").onclick = () => alert("Pista: admin / admin");
+    // --- LOGIN ---
+    const btnLogin = document.getElementById("btn-login");
+    const login = () => {
+        if(document.getElementById("login-user").value === "admin" && document.getElementById("login-pass").value === "admin") {
+            localStorage.setItem("uf_auth", "true");
+            location.reload();
+        } else { alert("Error"); }
+    };
+    btnLogin.onclick = login;
 
-    if(localStorage.getItem("session_uf") === "active") {
+    if(localStorage.getItem("uf_auth") === "true") {
         document.getElementById("login-screen").classList.add("hidden");
         document.getElementById("main-screen").classList.remove("hidden");
-        iniciarApp();
-    }
-
-    function iniciarApp() {
-        // Escucha de Firebase
+        
+        // --- CARGA FIREBASE ---
         onSnapshot(query(collection(db, "departamentos"), orderBy("UF", "asc")), (snap) => {
             departamentos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             render(departamentos);
         });
 
-        // RENDER PRINCIPAL
+        // --- RENDERIZADO ---
         function render(data) {
-            const listDiv = document.getElementById("list");
-            listDiv.innerHTML = ""; // Limpieza de duplicados
+            const list = document.getElementById("list");
+            list.innerHTML = "";
             data.forEach(d => {
-                const tieneTel = (d.TelefonoPropietario && d.TelefonoPropietario.trim() !== "") || 
-                                (d.TelefonoInquilino && d.TelefonoInquilino.trim() !== "");
+                const sinTel = !d.TelefonoPropietario && !d.TelefonoInquilino;
+                const tel = d.TelefonoPropietario || d.TelefonoInquilino || "";
                 
-                const telLink = d.TelefonoPropietario || d.TelefonoInquilino || "";
-                const wpNum = telLink.replace(/\D/g,'');
-
                 const div = document.createElement("div");
-                div.className = `item ${!tieneTel ? 'no-phone' : ''}`;
+                div.className = `item ${sinTel ? 'no-phone' : ''}`;
                 div.innerHTML = `
                     <div style="display:flex; justify-content:space-between">
-                        <b style="color:var(--primary)">UF ${d.UF}</b>
+                        <b style="color:var(--accent); font-size:18px">UF ${d.UF}</b>
                         <div>
-                            <i class="fas fa-edit" style="margin-right:15px; cursor:pointer" onclick="window.editUF('${d.id}')"></i>
-                            <i class="fas fa-trash" style="color:var(--danger); cursor:pointer" onclick="window.deleteUF('${d.id}')"></i>
+                            <i class="fas fa-edit" style="margin-right:15px" onclick="window.editUF('${d.id}')"></i>
+                            <i class="fas fa-trash" style="color:var(--danger)" onclick="window.deleteUF('${d.id}')"></i>
                         </div>
                     </div>
-                    <div style="margin:10px 0; font-size:14px">
-                        <div>Prop: ${d.Propietario || "-"}</div>
-                        <div>Inq: ${d.Inquilino || "-"}</div>
+                    <div style="font-size:14px; margin:8px 0">
+                        <p><b>Prop:</b> ${d.Propietario || "-"}</p>
+                        <p><b>Inq:</b> ${d.Inquilino || "-"}</p>
                     </div>
-                    <div class="action-bar ${!tieneTel ? 'hidden' : ''}">
-                        <a href="tel:${telLink}" class="action-btn primary"><i class="fas fa-phone"></i></a>
-                        <a href="https://wa.me/${wpNum}?text=Hola" target="_blank" class="action-btn success" style="background:#25d366"><i class="fab fa-whatsapp"></i></a>
+                    <div class="action-bar ${sinTel ? 'hidden' : ''}">
+                        <a href="tel:${tel}" class="action-btn primary" style="background:#2563eb"><i class="fas fa-phone"></i></a>
+                        <a href="https://wa.me/${tel.replace(/\D/g,'')}?text=Hola" target="_blank" class="action-btn success" style="background:#25d366"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 `;
-                listDiv.appendChild(div);
+                list.appendChild(div);
             });
         }
 
-        // EVENTOS DE BOTONES
+        // --- ACCIONES ---
         document.getElementById("btn-add").onclick = () => {
             editId = null;
             document.querySelectorAll("#modal-form input").forEach(i => i.value = "");
@@ -95,40 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("modal-form").classList.add("hidden");
         };
 
-        document.getElementById("btn-search").onclick = () => {
-            const t = document.getElementById("search-input").value.toLowerCase();
-            render(departamentos.filter(d => Object.values(d).some(v => String(v).toLowerCase().includes(t))));
-        };
-
-        document.getElementById("btn-clear").onclick = () => {
-            document.getElementById("search-input").value = "";
-            render(departamentos);
-        };
-
-        document.getElementById("btn-filter-empty").onclick = () => {
-            render(departamentos.filter(d => !d.TelefonoPropietario && !d.TelefonoInquilino));
-        };
-
-        document.getElementById("btn-delete-all").onclick = async () => {
-            if(confirm("¿BORRAR TODO?") && prompt("Clave:") === "admin") {
-                const snap = await getDocs(collection(db, "departamentos"));
-                const batch = writeBatch(db);
-                snap.forEach(d => batch.delete(d.ref));
-                await batch.commit();
-            }
-        };
-
-        document.getElementById("btn-logout").onclick = () => { localStorage.removeItem("session_uf"); location.reload(); };
-        document.getElementById("btn-theme").onclick = () => document.body.classList.toggle("dark-mode");
-        document.getElementById("btn-toggle-log").onclick = () => document.getElementById("log-panel").classList.toggle("hidden");
-        document.getElementById("btn-cancel").onclick = () => document.getElementById("modal-form").classList.add("hidden");
-
-        // COHETE
-        const rocket = document.getElementById("btn-rocket");
-        window.onscroll = () => rocket.style.display = window.scrollY > 300 ? "block" : "none";
-        rocket.onclick = () => window.scrollTo({top:0, behavior:'smooth'});
-
-        // FUNCIONES GLOBALES
         window.editUF = (id) => {
             const d = departamentos.find(x => x.id === id);
             editId = id;
@@ -141,7 +103,54 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         window.deleteUF = async (id) => {
-            if(confirm("¿Eliminar?")) await deleteDoc(doc(db, "departamentos", id));
+            if(checkPass()) await deleteDoc(doc(db, "departamentos", id));
         };
+
+        document.getElementById("btn-delete-all").onclick = async () => {
+            if(confirm("¿BORRAR TODA LA BASE?") && checkPass()) {
+                const snap = await getDocs(collection(db, "departamentos"));
+                const batch = writeBatch(db);
+                snap.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+            }
+        };
+
+        // IMPORTAR / EXPORTAR
+        document.getElementById("btn-export").onclick = () => {
+            let csv = "UF;Propietario;TelP;Inquilino;TelI\n";
+            departamentos.forEach(d => csv += `${d.UF};${d.Propietario};${d.TelefonoPropietario};${d.Inquilino};${d.TelefonoInquilino}\n`);
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'Base_UF.csv'; a.click();
+        };
+
+        document.getElementById("btn-import").onclick = () => document.getElementById("csv-file").click();
+        document.getElementById("csv-file").onchange = async (e) => {
+            const text = await e.target.files[0].text();
+            const lines = text.split("\n").slice(1);
+            const batch = writeBatch(db);
+            lines.forEach(l => {
+                const c = l.split(";");
+                if(c[0]) batch.set(doc(collection(db, "departamentos")), { UF:c[0], Propietario:c[1]||"", TelefonoPropietario:c[2]||"", Inquilino:c[3]||"", TelefonoInquilino:c[4]||"" });
+            });
+            await batch.commit();
+            alert("Importación completa");
+        };
+
+        // OTROS
+        document.getElementById("btn-filter-empty").onclick = () => render(departamentos.filter(d => !d.TelefonoPropietario && !d.TelefonoInquilino));
+        document.getElementById("btn-clear").onclick = () => render(departamentos);
+        document.getElementById("btn-search").onclick = () => {
+            const val = document.getElementById("search-input").value.toLowerCase();
+            render(departamentos.filter(d => d.UF.includes(val) || d.Propietario.toLowerCase().includes(val)));
+        };
+        document.getElementById("btn-logout").onclick = () => { localStorage.removeItem("uf_auth"); location.reload(); };
+        document.getElementById("btn-theme").onclick = () => document.body.classList.toggle("dark-mode");
+        document.getElementById("btn-log-toggle").onclick = () => document.getElementById("log-panel").classList.toggle("hidden");
+        document.getElementById("btn-cancel").onclick = () => document.getElementById("modal-form").classList.add("hidden");
+        
+        const rocket = document.getElementById("btn-rocket");
+        window.onscroll = () => rocket.classList.toggle("hidden", window.scrollY < 300);
+        rocket.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });

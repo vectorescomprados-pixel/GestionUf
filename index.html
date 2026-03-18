@@ -3,59 +3,58 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>GestiónUF App</title>
+    <title>GestiónUF</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="dark-mode">
-    <button id="btn-rocket"><i class="fas fa-rocket"></i></button>
+    <button id="btn-rocket" class="hidden"><i class="fas fa-rocket"></i></button>
+    <input type="file" id="csv-file" accept=".csv" class="hidden">
 
-    <div id="login-screen" style="position:fixed; inset:0; background:var(--bg); z-index:9000; display:flex; align-items:center; justify-content:center">
-        <div style="width:80%; max-width:320px; text-align:center">
-            <h1 style="color:var(--primary)">GestiónUF</h1>
-            <input type="text" id="login-user" placeholder="Usuario">
-            <input type="password" id="login-pass" placeholder="Contraseña">
-            <button id="btn-login" class="btn primary" style="width:100%; font-size:14px">ENTRAR</button>
-            <button id="btn-recover" class="btn ghost" style="width:100%; margin-top:10px">RECUPERAR CLAVE</button>
+    <div id="login-screen" class="modal">
+        <div class="modal-content" style="text-align:center">
+            <h2>GestiónUF</h2>
+            <input id="login-user" placeholder="Usuario">
+            <input id="login-pass" type="password" placeholder="Contraseña">
+            <button id="btn-login" class="btn primary" style="width:100%">ENTRAR</button>
         </div>
     </div>
 
     <div id="main-screen" class="hidden">
-        <div class="wrap">
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px">
-                <button id="btn-toggle-log" class="btn ghost">LOG</button>
-                <button id="btn-theme" class="btn ghost">MODO</button>
-                <button id="btn-logout" class="btn danger">SALIR</button>
+        <div class="main-header">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px">
+                <button id="btn-log-toggle" class="btn ghost" style="width:60px">LOG</button>
+                <button id="btn-theme" class="btn ghost" style="width:60px">MODO</button>
+                <button id="btn-logout" class="btn danger" style="width:60px">SALIR</button>
             </div>
-
-            <div id="log-panel" class="hidden" style="background:#000; color:#0f0; padding:10px; font-size:10px; border-radius:8px; margin-bottom:10px; height:80px; overflow:auto"></div>
-
             <div class="grid-btns">
                 <button id="btn-add" class="btn primary">NUEVA UF</button>
                 <button id="btn-import" class="btn ghost">IMPORTAR</button>
                 <button id="btn-export" class="btn ghost">EXPORTAR</button>
+                <button id="btn-delete-all" class="btn danger" style="grid-column: span 3">BORRAR BASE DE DATOS</button>
             </div>
-
-            <input type="text" id="search-input" placeholder="Buscar UF, nombre...">
+            <input id="search-input" placeholder="Buscar por UF, Propietario...">
             <div class="grid-btns">
-                <button id="btn-search" class="btn primary">BUSCAR</button>
+                <button id="btn-search" class="btn primary" style="grid-column: span 2">BUSCAR</button>
                 <button id="btn-clear" class="btn ghost">VER TODO</button>
-                <button id="btn-filter-empty" class="btn ghost" style="background:#f59e0b; color:black">VER VACÍOS</button>
             </div>
-            <button id="btn-delete-all" class="btn danger" style="width:100%; margin-top:5px">BORRAR TODA LA BASE</button>
+            <button id="btn-filter-empty" class="btn" style="background:#f59e0b; color:black; width:100%; font-weight:bold">VER REGISTROS SIN TELÉFONO</button>
+        </div>
 
-            <div id="list" style="margin-top:20px"></div>
+        <div class="content-body">
+            <div id="log-panel" class="hidden" style="background:#000; color:#0f0; padding:10px; font-size:10px; border-radius:8px; margin-bottom:15px; height:80px; overflow:auto"></div>
+            <div id="list"></div>
         </div>
     </div>
 
-    <div id="modal-form" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px">
-        <div style="background:var(--card); width:100%; max-width:400px; padding:20px; border-radius:15px">
-            <h3>Ficha de Unidad</h3>
-            <input type="text" id="f-uf" placeholder="UF">
-            <input type="text" id="f-prop" placeholder="Propietario">
-            <input type="text" id="f-telp" placeholder="Tel Propietario">
-            <input type="text" id="f-inq" placeholder="Inquilino">
-            <input type="text" id="f-teli" placeholder="Tel Inquilino">
+    <div id="modal-form" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="form-title">Nueva Unidad</h3>
+            <input id="f-uf" placeholder="UF">
+            <input id="f-prop" placeholder="Propietario">
+            <input id="f-telp" placeholder="Tel Propietario">
+            <input id="f-inq" placeholder="Inquilino">
+            <input id="f-teli" placeholder="Tel Inquilino">
             <div class="grid-btns">
                 <button id="btn-save" class="btn primary">GUARDAR</button>
                 <button id="btn-cancel" class="btn danger">CANCELAR</button>
