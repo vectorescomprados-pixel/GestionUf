@@ -1,26 +1,24 @@
-﻿<div id="login-screen" class="modal">
-    <div class="modal-content">
-        <h2 style="color:var(--primary)">GestiónUF</h2>
-        <input id="login-user" placeholder="Usuario">
-        <input id="login-pass" type="password" placeholder="Contraseña">
-        <button id="btn-login" class="btn primary" style="width:100%">ENTRAR</button>
-        <button id="btn-recover-open" class="btn ghost" style="width:100%; margin-top:10px; font-size:10px">OLVIDÉ MI CONTRASEÑA</button>
+﻿<body class="dark-mode">
+    <div id="login-screen" class="modal">
+        <div class="wrap" style="background:var(--card); padding:30px; border-radius:20px; text-align:center">
+            <h2 style="color:var(--primary)">GestiónUF</h2>
+            <input id="login-user" placeholder="Usuario">
+            <input id="login-pass" type="password" placeholder="Contraseña">
+            <button id="btn-login" class="btn primary" style="width:100%">ENTRAR</button>
+            <button id="btn-recover-open" class="btn ghost" style="width:100%; margin-top:10px">RECUPERAR</button>
+        </div>
     </div>
-</div>
 
-<div id="modal-recover" class="modal hidden">
-    <div class="modal-content">
-        <h3>Recuperar Acceso</h3>
-        <div id="step-1">
-            <p style="font-size:12px">Ingrese teléfono registrado:</p>
-            <input id="rec-tel" type="tel" placeholder="Ej: 1122334455">
-            <button id="btn-verify-tel" class="btn primary" style="width:100%">VERIFICAR</button>
-        </div>
-        <div id="step-2" class="hidden">
-            <p style="font-size:12px">Nueva contraseña:</p>
-            <input id="new-pass" type="password" placeholder="Mínimo 4 caracteres">
-            <button id="btn-save-pass" class="btn primary" style="width:100%">CAMBIAR CLAVE</button>
-        </div>
-        <button id="btn-close-rec" class="btn danger" style="width:100%; margin-top:10px">CANCELAR</button>
+    <div id="main-screen" class="hidden">
+        <div class="wrap">
+            <div class="main-header">
+                <div id="conn-status" class="status-bar online">● APP EN LÍNEA</div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px">
+                    <button id="btn-log-toggle" class="btn ghost" style="width:30%">LOG</button>
+                    <button id="btn-theme" class="btn ghost" style="width:30%">MODO</button>
+                    <button id="btn-logout" class="btn danger" style="width:30%">SALIR</button>
+                </div>
+                </div>
+            </div>
     </div>
-</div>
+    </body>
