@@ -14,44 +14,63 @@ document.addEventListener("DOMContentLoaded", () => {
     let departamentos = [];
     let editId = null;
     let currentUser = JSON.parse(localStorage.getItem("isLogged"));
-    let users = JSON.parse(localStorage.getItem("users")) || [{username:"admin", password:"admin", role:"admin"}];
-
-    const pedirClave = () => prompt("Seguridad: Ingrese su clave de usuario") === currentUser.password;
 
     const renderList = (items) => {
         const listDiv = document.getElementById("list");
-        listDiv.innerHTML = ""; // ELIMINA DUPLICADOS
+        listDiv.innerHTML = ""; // <--- EVITA TRIPLICADOS
         items.forEach(d => {
-            const sinTel = (!d.TelefonoPropietario && !d.TelefonoInquilino);
-            const div = document.createElement("div");
-            div.className = `item ${sinTel ? 'empty' : ''}`;
+            const hasTel = (d.TelefonoPropietario || d.TelefonoInquilino);
             const tel = d.TelefonoPropietario || d.TelefonoInquilino || "";
             const wp = tel.replace(/\D/g,'');
-
+            
+            const div = document.createElement("div");
+            div.className = `item ${!hasTel ? 'empty' : ''}`;
             div.innerHTML = `
                 <div style="display:flex; justify-content:space-between">
                     <b style="color:var(--primary)">UF ${d.UF}</b>
-                    <div style="display:flex; gap:12px">
+                    <div style="display:flex; gap:15px">
                         <i class="fas fa-edit" onclick="window.editUF('${d.id}')"></i>
                         <i class="fas fa-trash admin-only" style="color:var(--danger)" onclick="window.deleteUF('${d.id}', '${d.UF}')"></i>
                     </div>
                 </div>
-                <div style="font-size:14px; margin:8px 0">
-                    <p style="margin:2px 0">Prop: ${d.Propietario || "-"}</p>
-                    <p style="margin:2px 0">Inq: ${d.Inquilino || "-"}</p>
+                <div style="font-size:14px; margin:10px 0">
+                    <p>Prop: ${d.Propietario || "-"}</p>
+                    <p>Inq: ${d.Inquilino || "-"}</p>
                 </div>
-                ${sinTel ? '<span style="font-size:10px; color:#f59e0b; font-weight:bold">⚠️ CARGAR CONTACTO</span>' : ''}
-                <div class="action-bar">
+                ${!hasTel ? '<b style="color:#f59e0b; font-size:11px">⚠️ CARGAR CONTACTO</b>' : ''}
+                <div class="action-bar ${!hasTel ? 'hidden' : ''}">
                     <a href="tel:${tel}" class="action-btn primary"><i class="fas fa-phone"></i></a>
-                    <a href="https://wa.me/${wp}?text=Hola" target="_blank" class="action-btn success"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://wa.me/${wp}?text=Hola" target="_blank" class="action-btn success" style="background:#25d366"><i class="fab fa-whatsapp"></i></a>
                 </div>
             `;
             listDiv.appendChild(div);
         });
-        if(currentUser?.role !== "admin") document.querySelectorAll(".admin-only").forEach(el => el.style.display = "none");
     };
 
-    // BOTONES QUE NO FUNCIONABAN:
+    // --- FUNCIONES CORE ---
+    window.deleteUF = async (id, uf) => {
+        if(prompt("Ingrese clave para borrar UF " + uf) === currentUser.password) {
+            await deleteDoc(doc(db, "departamentos", id));
+            addLog("Eliminó UF " + uf);
+        }
+    };
+
+    document.getElementById("btn-delete-all").onclick = async () => {
+        if(confirm("¿BORRAR TODA LA BASE?") && prompt("Confirme con su clave:") === currentUser.password) {
+            const snap = await getDocs(collection(db, "departamentos"));
+            const batch = writeBatch(db);
+            snap.forEach(d => batch.delete(d.ref));
+            await batch.commit();
+            addLog("BORRADO TOTAL DE BASE");
+        }
+    };
+
+    document.getElementById("btn-add").onclick = () => {
+        editId = null;
+        document.querySelectorAll("#modal-form input").forEach(i => i.value = "");
+        document.getElementById("modal-form").classList.remove("hidden");
+    };
+
     document.getElementById("btn-clear").onclick = () => {
         document.getElementById("search-text").value = "";
         renderList(departamentos);
@@ -61,41 +80,30 @@ document.addEventListener("DOMContentLoaded", () => {
         renderList(departamentos.filter(d => !d.TelefonoPropietario && !d.TelefonoInquilino));
     };
 
-    document.getElementById("btn-export").onclick = () => {
-        let csv = "UF;Propietario;TelP;Inquilino;TelI\n";
-        departamentos.forEach(d => csv += `${d.UF};${d.Propietario};${d.TelefonoPropietario};${d.Inquilino};${d.TelefonoInquilino}\n`);
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
-        a.download = "Base_Datos.csv"; a.click();
-    };
-
-    document.getElementById("btn-import").onclick = () => document.getElementById("csv-file").click();
-    document.getElementById("csv-file").onchange = async (e) => {
-        const text = await e.target.files[0].text();
-        const rows = text.split("\n").slice(1);
-        const batch = writeBatch(db);
-        rows.forEach(row => {
-            const c = row.split(";");
-            if(c[0]) batch.set(doc(collection(db, "departamentos")), {UF:c[0], Propietario:c[1]||"", TelefonoPropietario:c[2]||"", Inquilino:c[3]||"", TelefonoInquilino:c[4]||""});
+    // --- LOGS ---
+    const addLog = async (msg) => {
+        await addDoc(collection(db, "app_logs"), {
+            time: new Date().toLocaleTimeString(), user: currentUser.username, action: msg, timestamp: serverTimestamp()
         });
-        await batch.commit();
     };
+    document.getElementById("btn-toggle-log").onclick = () => document.getElementById("log-container").classList.toggle("hidden");
 
-    // MODOS Y LOGS
-    document.getElementById("btn-dark-mode").onclick = () => document.body.classList.toggle("dark-mode");
-    document.getElementById("btn-show-log").onclick = () => document.getElementById("log-modal").classList.remove("hidden");
-    document.getElementById("btn-close-log").onclick = () => document.getElementById("log-modal").classList.add("hidden");
+    // --- COHETE ---
+    const rocket = document.getElementById("btn-rocket");
+    window.onscroll = () => rocket.style.display = window.scrollY > 300 ? "block" : "none";
+    rocket.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
 
-    // LOGIN
+    // --- LOGIN Y CARGA ---
     const login = () => {
         const u = document.getElementById("login-user").value, p = document.getElementById("login-pass").value;
-        const found = users.find(x => x.username === u && x.password === p);
-        if(found) { localStorage.setItem("isLogged", JSON.stringify(found)); location.reload(); }
+        if(u === "admin" && p === "admin") { // Ejemplo simple
+            localStorage.setItem("isLogged", JSON.stringify({username:u, password:p, role:"admin"}));
+            location.reload();
+        }
     };
     document.getElementById("btn-login").onclick = login;
     document.getElementById("login-pass").onkeypress = (e) => { if(e.key === "Enter") login(); };
 
-    // INICIO DE DATOS
     if(currentUser) {
         document.getElementById("login-screen").classList.add("hidden");
         document.getElementById("main-screen").classList.remove("hidden");
@@ -103,15 +111,24 @@ document.addEventListener("DOMContentLoaded", () => {
             departamentos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             renderList(departamentos);
         });
+        onSnapshot(query(collection(db, "app_logs"), orderBy("timestamp", "desc"), limit(10)), (snap) => {
+            document.getElementById("log-list").innerHTML = snap.docs.map(d => `<div>[${d.data().time}] ${d.data().action}</div>`).join('');
+        });
     }
 
-    // BOTONES DE CIERRE CORREGIDOS
-    document.getElementById("btn-users").onclick = () => document.getElementById("modal-users").classList.remove("hidden");
-    document.getElementById("btn-close-users").onclick = () => document.getElementById("modal-users").classList.add("hidden");
-    document.getElementById("btn-open-recover").onclick = () => document.getElementById("modal-recover").classList.remove("hidden");
-    document.getElementById("btn-close-recover").onclick = () => document.getElementById("modal-recover").classList.add("hidden");
+    // BOTONES MODALES
     document.getElementById("btn-cancel").onclick = () => document.getElementById("modal-form").classList.add("hidden");
-    document.getElementById("btn-logout").onclick = () => { localStorage.removeItem("isLogged"); location.reload(); };
+    document.getElementById("btn-save").onclick = async () => {
+        const data = {
+            UF: document.getElementById("f-uf").value.padStart(4,'0'),
+            Propietario: document.getElementById("f-prop").value, TelefonoPropietario: document.getElementById("f-telp").value,
+            Inquilino: document.getElementById("f-inq").value, TelefonoInquilino: document.getElementById("f-teli").value
+        };
+        if(editId) await updateDoc(doc(db, "departamentos", editId), data);
+        else await addDoc(collection(db, "departamentos"), data);
+        document.getElementById("modal-form").classList.add("hidden");
+        addLog("Guardó UF " + data.UF);
+    };
     
     window.editUF = (id) => {
         const d = departamentos.find(x => x.id === id);
@@ -120,7 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("modal-form").classList.remove("hidden");
     };
 
-    window.deleteUF = async (id, uf) => {
-        if(pedirClave()) await deleteDoc(doc(db, "departamentos", id));
-    };
+    document.getElementById("btn-dark").onclick = () => document.body.classList.toggle("dark-mode");
+    document.getElementById("btn-logout").onclick = () => { localStorage.removeItem("isLogged"); location.reload(); };
 });
