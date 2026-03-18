@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-    <title>GestiónUF Pro Cloud</title>
+    <title>GestiónUF Cloud Pro</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -16,6 +16,7 @@
                 <span>Ver Log</span>
                 <label class="switch"><input type="checkbox" id="log-toggle" checked><span class="slider"></span></label>
             </div>
+            <div id="sync-status" style="color: #22c55e; font-size: 11px; font-weight: bold;">● APP EN LÍNEA</div>
             <div class="control-group">
                 <span>Modo Oscuro</span>
                 <label class="switch"><input type="checkbox" id="mode-toggle" checked><span class="slider"></span></label>
@@ -23,7 +24,7 @@
         </div>
 
         <div id="login-screen" class="card">
-            <h1>GestiónUF</h1>
+            <h1>GestiónUF Cloud</h1>
             <input id="login-user" placeholder="Usuario">
             <input id="login-pass" type="password" placeholder="Contraseña">
             <button id="btn-login" class="btn primary" style="width:100%">Entrar</button>
@@ -47,10 +48,14 @@
             </div>
 
             <section class="search-section">
-                <input id="search-text" placeholder="Buscar por UF, Propietario o Inquilino...">
+                <div style="position:relative">
+                    <input id="search-text" placeholder="Buscar UF o Nombre...">
+                    <button id="btn-clear-search" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer">✕</button>
+                </div>
                 <div class="grid-btns">
                     <button id="btn-search" class="btn primary">Buscar</button>
                     <button id="btn-list" class="btn">Ver Todos</button>
+                    <button id="btn-list-empty" class="btn warning-btn">Listar Vacíos</button>
                 </div>
             </section>
 
@@ -79,31 +84,22 @@
     </div>
 
     <div id="modal-users-list" class="modal hidden">
-        <div class="modal-content card" style="max-width:400px; width:90%">
+        <div class="modal-content card">
             <h3>Gestión de Cuentas</h3>
             <div id="users-admin-list" style="max-height:150px; overflow-y:auto; margin-bottom:10px"></div>
             <hr>
-            <input id="u-name" placeholder="Nuevo Usuario">
-            <input id="u-pass" type="password" placeholder="Nueva Clave">
+            <input id="u-name" placeholder="Nuevo Usuario"><input id="u-pass" type="password" placeholder="Clave">
             <select id="u-role"><option value="user">Usuario</option><option value="admin">Admin</option></select>
-            <div class="grid-btns">
-                <button id="btn-save-user" class="btn primary">Crear</button>
-                <button id="btn-close-users" class="btn danger">Cerrar</button>
-            </div>
+            <div class="grid-btns"><button id="btn-save-user" class="btn primary">Crear</button><button id="btn-close-users" class="btn danger">Cerrar</button></div>
         </div>
     </div>
 
     <div id="modal-recover" class="modal hidden">
-        <div class="modal-content card" style="max-width: 350px;">
+        <div class="modal-content card">
             <h3>Recuperar Admin</h3>
             <input id="recover-phone" type="tel" placeholder="Celular Maestro">
-            <div id="recover-step-2" class="hidden">
-                <input id="new-admin-pass" type="password" placeholder="Nueva Clave Admin">
-            </div>
-            <div class="grid-btns">
-                <button id="btn-verify-phone" class="btn primary">Verificar</button>
-                <button id="btn-close-recover" class="btn danger">Cerrar</button>
-            </div>
+            <div id="recover-step-2" class="hidden"><input id="new-admin-pass" type="password" placeholder="Nueva Clave Admin"></div>
+            <div class="grid-btns"><button id="btn-verify-phone" class="btn primary">Verificar</button><button id="btn-close-recover" class="btn danger">Cerrar</button></div>
         </div>
     </div>
 
