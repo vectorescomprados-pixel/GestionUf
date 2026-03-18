@@ -8,14 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="dark-mode">
+    <button id="btn-rocket" class="hidden"><i class="fas fa-rocket"></i></button>
     <input type="file" id="csv-file" accept=".csv" class="hidden">
 
     <div id="login-screen" style="position:fixed; inset:0; background:var(--bg); z-index:9999; display:flex; align-items:center; justify-content:center">
-        <div class="wrap" style="text-align:center; background:var(--card); padding:30px; border-radius:20px">
-            <h2>GestiónUF</h2>
+        <div class="wrap" style="text-align:center; background:var(--card); padding:30px; border-radius:20px; border:1px solid var(--border)">
+            <h2 style="color:var(--primary)">GestiónUF</h2>
             <input id="login-user" placeholder="Usuario">
             <input id="login-pass" type="password" placeholder="Contraseña">
-            <button id="btn-login" class="btn primary" style="width:100%">ENTRAR</button>
+            <button id="btn-login" class="btn primary" style="width:100%; font-size:14px">ENTRAR</button>
+            <button id="btn-recover" class="btn ghost" style="width:100%; margin-top:10px; font-size:10px">OLVIDÉ MI CONTRASEÑA</button>
         </div>
     </div>
 
@@ -23,9 +25,9 @@
         <div class="wrap">
             <div class="main-header">
                 <div style="display:flex; justify-content:space-between; margin-bottom:10px">
-                    <button id="btn-log-toggle" class="btn ghost">LOG</button>
-                    <button id="btn-theme" class="btn ghost">MODO</button>
-                    <button id="btn-logout" class="btn danger">SALIR</button>
+                    <button id="btn-log-toggle" class="btn ghost" style="width:80px">LOG</button>
+                    <button id="btn-theme" class="btn ghost" style="width:80px">MODO</button>
+                    <button id="btn-logout" class="btn danger" style="width:80px">SALIR</button>
                 </div>
                 <div class="grid-btns">
                     <button id="btn-add" class="btn primary">NUEVA UF</button>
@@ -48,17 +50,14 @@
         </div>
     </div>
 
-    <div id="modal-form" class="modal hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:10000; display:flex; align-items:center; justify-content:center">
-        <div class="wrap" style="background:var(--card); padding:20px; border-radius:15px">
-            <h3>Ficha UF</h3>
-            <input id="f-uf" placeholder="UF">
-            <input id="f-prop" placeholder="Propietario">
-            <input id="f-telp" placeholder="Tel Propietario">
-            <input id="f-inq" placeholder="Inquilino">
-            <input id="f-teli" placeholder="Tel Inquilino">
+    <div id="modal-confirm" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10001; display:flex; align-items:center; justify-content:center">
+        <div class="wrap" style="background:var(--card); padding:20px; border-radius:15px; text-align:center">
+            <h3 id="confirm-title">Confirmar Acción</h3>
+            <p id="confirm-msg" style="font-size:12px"></p>
+            <input id="confirm-pass" type="password" placeholder="Clave de Administrador">
             <div class="grid-btns">
-                <button id="btn-save" class="btn primary">GUARDAR</button>
-                <button id="btn-cancel" class="btn danger">CANCELAR</button>
+                <button id="btn-confirm-yes" class="btn primary">CONFIRMAR</button>
+                <button id="btn-confirm-no" class="btn danger">CANCELAR</button>
             </div>
         </div>
     </div>
