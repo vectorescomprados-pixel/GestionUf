@@ -1,67 +1,19 @@
-﻿<!doctype html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>GestiónUF</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body class="dark-mode">
-    <button id="btn-rocket" class="hidden"><i class="fas fa-rocket"></i></button>
-    <input type="file" id="csv-file" accept=".csv" class="hidden">
+﻿<div class="grid-btns">
+    <button id="btn-search" class="btn primary">BUSCAR</button>
+    <button id="btn-clear" class="btn ghost">VER TODO</button> <button id="btn-filter-empty" class="btn" style="background:var(--warning); color:black">VACÍOS</button>
+</div>
 
-    <div id="login-screen" style="position:fixed; inset:0; background:var(--bg); z-index:9999; display:flex; align-items:center; justify-content:center">
-        <div class="wrap" style="text-align:center; background:var(--card); padding:30px; border-radius:20px; border:1px solid var(--border)">
-            <h2 style="color:var(--primary)">GestiónUF</h2>
-            <input id="login-user" placeholder="Usuario">
-            <input id="login-pass" type="password" placeholder="Contraseña">
-            <button id="btn-login" class="btn primary" style="width:100%; font-size:14px">ENTRAR</button>
-            <button id="btn-recover" class="btn ghost" style="width:100%; margin-top:10px; font-size:10px">OLVIDÉ MI CONTRASEÑA</button>
+<div id="modal-recover" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10002; display:flex; align-items:center; justify-content:center">
+    <div class="wrap" style="background:var(--card); padding:25px; border-radius:15px; text-align:center">
+        <h3>Recuperar Acceso</h3>
+        <p style="font-size:12px; margin-bottom:15px">Ingrese su número de teléfono registrado para validar su identidad</p>
+        <input id="rec-tel" placeholder="Número de Teléfono (sin espacios)">
+        <div id="step-new-pass" class="hidden">
+            <input id="new-pass" type="password" placeholder="Nueva Contraseña">
+        </div>
+        <div class="grid-btns">
+            <button id="btn-rec-verify" class="btn primary">VERIFICAR</button>
+            <button id="btn-rec-cancel" class="btn danger">CANCELAR</button>
         </div>
     </div>
-
-    <div id="main-screen" class="hidden">
-        <div class="wrap">
-            <div class="main-header">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px">
-                    <button id="btn-log-toggle" class="btn ghost" style="width:80px">LOG</button>
-                    <button id="btn-theme" class="btn ghost" style="width:80px">MODO</button>
-                    <button id="btn-logout" class="btn danger" style="width:80px">SALIR</button>
-                </div>
-                <div class="grid-btns">
-                    <button id="btn-add" class="btn primary">NUEVA UF</button>
-                    <button id="btn-import" class="btn ghost">IMPORTAR</button>
-                    <button id="btn-export" class="btn ghost">EXPORTAR</button>
-                </div>
-                <input id="search-input" placeholder="Buscar por UF o Propietario...">
-                <div class="grid-btns">
-                    <button id="btn-search" class="btn primary">BUSCAR</button>
-                    <button id="btn-clear" class="btn ghost">LIMPIAR</button>
-                    <button id="btn-filter-empty" class="btn" style="background:var(--warning); color:black">VACÍOS</button>
-                </div>
-                <button id="btn-delete-all" class="btn danger" style="width:100%">BORRAR BASE DE DATOS</button>
-            </div>
-
-            <div class="content-body">
-                <div id="log-panel" class="hidden"></div>
-                <div id="list"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-confirm" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10001; display:flex; align-items:center; justify-content:center">
-        <div class="wrap" style="background:var(--card); padding:20px; border-radius:15px; text-align:center">
-            <h3 id="confirm-title">Confirmar Acción</h3>
-            <p id="confirm-msg" style="font-size:12px"></p>
-            <input id="confirm-pass" type="password" placeholder="Clave de Administrador">
-            <div class="grid-btns">
-                <button id="btn-confirm-yes" class="btn primary">CONFIRMAR</button>
-                <button id="btn-confirm-no" class="btn danger">CANCELAR</button>
-            </div>
-        </div>
-    </div>
-
-    <script type="module" src="app.js"></script>
-</body>
-</html>
+</div>
