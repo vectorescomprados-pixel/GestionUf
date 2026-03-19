@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-    <title>GestiónUF Pro - Versión Final 100%</title>
+    <title>GestiónUF Pro - Versión Corregida</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bg: #f0f2f5; --card: #ffffff; --primary: #2563eb; --danger: #e11d48; --text: #1f293b; --border: #e5e7eb; --warning: #f59e0b; --success: #22c55e; }
@@ -19,11 +19,16 @@
         .btn { height: 42px; border-radius: 8px; border: none; font-weight: bold; font-size: 11px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .primary { background: var(--primary); } .danger { background: var(--danger); } .ghost { background: #64748b; } .warning { background: var(--warning); color: #000; }
         .item { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border); width: 100%; }
-        .item.no-phone { border-left: 8px solid var(--warning); }
+        .item.no-phone { border-left: 8px solid var(--warning) !important; }
         .item b { font-size: 18px; color: var(--primary); }
         .details { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
         input { width: 100%; height: 45px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--border); padding: 0 15px; background: var(--bg); color: var(--text); font-size: 16px; }
-        #log-panel { background: #000; padding: 10px; font-size: 10px; margin-bottom: 15px; height: 85px; overflow-y: auto; border-radius: 8px; font-family: monospace; }
+        
+        /* Contenedor Log con botón de descarga */
+        #log-container { position: relative; margin-bottom: 15px; }
+        #log-panel { background: #000; padding: 10px; font-size: 10px; height: 85px; overflow-y: auto; border-radius: 8px; font-family: monospace; }
+        #btn-download-log { position: absolute; right: 5px; top: 5px; background: #333; color: #fff; border: none; padding: 4px 7px; border-radius: 4px; cursor: pointer; font-size: 10px; z-index: 10; }
+        
         .log-success { color: #0f0; } .log-warn { color: #ff0; } .log-err { color: #f44; }
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; }
@@ -68,8 +73,23 @@
             <button id="btn-delete-all" class="btn danger" style="width:100%">BORRAR BASE DE DATOS</button>
         </div>
         <div class="content-body">
-            <div id="log-panel" class="hidden"></div>
+            <div id="log-container" class="hidden">
+                <button id="btn-download-log" title="Descargar Historial"><i class="fas fa-download"></i></button>
+                <div id="log-panel"></div>
+            </div>
             <div id="list"></div>
+        </div>
+    </div>
+
+    <div id="modal-confirm" class="modal hidden">
+        <div class="modal-content" style="text-align:center">
+            <h3>Confirmar Seguridad</h3>
+            <p id="confirm-msg" style="margin:10px 0; font-size:13px"></p>
+            <input id="confirm-pass" type="password" placeholder="Contraseña Admin">
+            <div class="grid-btns-2">
+                <button id="btn-confirm-yes" class="btn primary">CONFIRMAR</button>
+                <button id="btn-confirm-no" class="btn danger">VOLVER</button>
+            </div>
         </div>
     </div>
 
@@ -84,18 +104,6 @@
             <div class="grid-btns-2">
                 <button id="btn-save" class="btn primary">GUARDAR</button>
                 <button id="btn-cancel" class="btn danger">CANCELAR</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-confirm" class="modal hidden">
-        <div class="modal-content" style="text-align:center">
-            <h3>Confirmar Seguridad</h3>
-            <p id="confirm-msg" style="margin:10px 0; font-size:13px"></p>
-            <input id="confirm-pass" type="password" placeholder="Contraseña Admin">
-            <div class="grid-btns-2">
-                <button id="btn-confirm-yes" class="btn primary">CONFIRMAR</button>
-                <button id="btn-confirm-no" class="btn danger">VOLVER</button>
             </div>
         </div>
     </div>
@@ -173,6 +181,7 @@
             });
         }
 
+        // --- CORRECCIÓN LÓGICA DE COLORES Y RENDER ---
         function render(data, searching = false) {
             const list = document.getElementById("list");
             if(data.length === 0) {
@@ -182,8 +191,13 @@
             }
             list.innerHTML = "";
             data.forEach(d => {
-                const sinT = !d.TelefonoPropietario && !d.TelefonoInquilino;
-                const tel = d.TelefonoPropietario || d.TelefonoInquilino || "";
+                // CORRECCIÓN: Validar si realmente no hay teléfonos (limpiando espacios)
+                const telP = d.TelefonoPropietario ? String(d.TelefonoPropietario).trim() : "";
+                const telI = d.TelefonoInquilino ? String(d.TelefonoInquilino).trim() : "";
+                const sinT = (telP === "" && telI === "");
+                
+                const telActivo = telP || telI || "";
+                
                 const div = document.createElement("div");
                 div.className = `item ${sinT ? 'no-phone' : ''}`;
                 div.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center">
@@ -191,8 +205,8 @@
                     <i class="fas fa-edit" onclick="window.editUF('${d.id}')"></i>
                     <i class="fas fa-trash" style="color:var(--danger)" onclick="window.askConfirm('Eliminar UF ${d.UF}', 'delete', '${d.id}')"></i></div></div>
                     <div id="det-${d.id}" class="details hidden"><p><b>P:</b> ${d.Propietario || "-"}</p><p><b>I:</b> ${d.Inquilino || "-"}</p>
-                    <div style="display:flex; gap:10px; margin-top:10px"><a href="tel:${tel}" class="btn primary" style="height:35px; width:50%"><i class="fas fa-phone"></i></a>
-                    <a href="https://wa.me/${tel.replace(/\D/g,'')}" target="_blank" class="btn" style="height:35px; width:50%; background:#25d366"><i class="fab fa-whatsapp"></i></a></div></div>`;
+                    <div style="display:flex; gap:10px; margin-top:10px"><a href="tel:${telActivo}" class="btn primary" style="height:35px; width:50%"><i class="fas fa-phone"></i></a>
+                    <a href="https://wa.me/${telActivo.replace(/\D/g,'')}" target="_blank" class="btn" style="height:35px; width:50%; background:#25d366"><i class="fab fa-whatsapp"></i></a></div></div>`;
                 list.appendChild(div);
             });
         }
@@ -203,7 +217,15 @@
             if(document.getElementById("confirm-pass").value !== getAdminPass()) return alert("Clave de seguridad incorrecta");
             toggleLoading("btn-confirm-yes", true);
             if(pendingAction.type === 'delete') { await deleteDoc(doc(db, "departamentos", pendingAction.id)); writeLog("UF Eliminada satisfactoriamente", "warn"); }
-            if(pendingAction.type === 'deleteAll') { const batch = writeBatch(db); (await getDocs(collection(db, "departamentos"))).forEach(d => batch.delete(d.ref)); await batch.commit(); writeLog("BASE DE DATOS PURGADA", "err"); }
+            
+            // CORRECCIÓN: Log de eliminación masiva detallado
+            if(pendingAction.type === 'deleteAll') { 
+                const batch = writeBatch(db); 
+                (await getDocs(collection(db, "departamentos"))).forEach(d => batch.delete(d.ref)); 
+                await batch.commit(); 
+                writeLog("BASE DE DATOS PURGADA POR ADMIN", "err"); 
+            }
+            
             if(pendingAction.type === 'export') { 
                 const csv = "UF,Propietario,Tel_P,Inquilino,Tel_I\n" + departamentos.map(d => `${d.UF},${d.Propietario},${d.TelefonoPropietario},${d.Inquilino},${d.TelefonoInquilino}`).join("\n");
                 const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'})); link.download = "Base_UF.csv"; link.click(); writeLog("Copia de seguridad descargada", "success");
@@ -212,11 +234,17 @@
             document.getElementById("modal-confirm").classList.add("hidden");
         };
 
-        const search = () => { const v = document.getElementById("search-input").value.toLowerCase(); render(departamentos.filter(d => d.UF.includes(v) || (d.Propietario && d.Propietario.toLowerCase().includes(v))), true); };
+        const search = () => { const v = document.getElementById("search-input").value.toLowerCase(); render(departamentos.filter(d => d.UF.toLowerCase().includes(v) || (d.Propietario && d.Propietario.toLowerCase().includes(v))), true); };
         document.getElementById("btn-search").onclick = search;
         document.getElementById("search-input").onkeydown = (e) => { if(e.key === "Enter") search(); };
         document.getElementById("btn-clear").onclick = () => { document.getElementById("search-input").value = ""; render(departamentos); writeLog("Vista restaurada: Ver todo", "warn"); };
-        document.getElementById("btn-filter-empty").onclick = () => { render(departamentos.filter(d => !d.Inquilino || d.Inquilino.trim() === ""), true); writeLog("Filtrado por unidades vacías", "warn"); };
+        
+        // CORRECCIÓN: Botón Vacíos ahora busca unidades sin inquilino real
+        document.getElementById("btn-filter-empty").onclick = () => { 
+            const vacios = departamentos.filter(d => !d.Inquilino || d.Inquilino.trim() === "" || d.Inquilino.toLowerCase() === "vacío" || d.Inquilino.toLowerCase() === "vacio");
+            render(vacios, true); 
+            writeLog(`Filtrado: ${vacios.length} unidades vacías`, "warn"); 
+        };
 
         document.getElementById("btn-add").onclick = () => { editId = null; document.getElementById("form-title").innerText = "Nueva UF"; document.querySelectorAll("#modal-form input").forEach(i => i.value = ""); document.getElementById("modal-form").classList.remove("hidden"); };
         window.editUF = (id) => { const d = departamentos.find(x => x.id === id); editId = id; document.getElementById("f-uf").value = d.UF; document.getElementById("f-prop").value = d.Propietario || ""; document.getElementById("f-telp").value = d.TelefonoPropietario || ""; document.getElementById("f-inq").value = d.Inquilino || ""; document.getElementById("f-teli").value = d.TelefonoInquilino || ""; document.getElementById("modal-form").classList.remove("hidden"); };
@@ -235,15 +263,36 @@
             const reader = new FileReader(); reader.onload = async (ev) => { 
                 writeLog("Iniciando importación masiva...", "warn");
                 const lines = ev.target.result.split('\n').slice(1); const batch = writeBatch(db); 
-                lines.forEach(l => { const [uf,p,tp,i,ti] = l.split(','); if(uf) batch.set(doc(collection(db, "departamentos")), {UF:uf.trim(), Propietario:p?.trim(), TelefonoPropietario:tp?.trim(), Inquilino:i?.trim(), TelefonoInquilino:ti?.trim()}); }); 
+                lines.forEach(l => { 
+                    const [uf,p,tp,i,ti] = l.split(','); 
+                    if(uf && uf.trim() !== "") {
+                        batch.set(doc(collection(db, "departamentos")), {
+                            UF: uf.trim(), 
+                            Propietario: p ? p.trim() : "", 
+                            TelefonoPropietario: tp ? tp.trim() : "", 
+                            Inquilino: i ? i.trim() : "", 
+                            TelefonoInquilino: ti ? ti.trim() : ""
+                        });
+                    }
+                }); 
                 await batch.commit(); writeLog("Importación completada con éxito", "success"); 
             }; reader.readAsText(e.target.files[0]); 
         };
         
+        // CORRECCIÓN: Función para descargar el Log en TXT
+        document.getElementById("btn-download-log").onclick = () => {
+            const logContent = document.getElementById("log-panel").innerText;
+            const blob = new Blob([logContent], {type: 'text/plain'});
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = `log_gestion_${new Date().getTime()}.txt`;
+            a.click();
+        };
+
         document.getElementById("btn-export").onclick = () => window.askConfirm("Preparando descarga segura de la base.", "export");
-        document.getElementById("btn-delete-all").onclick = () => window.askConfirm("¡ATENCIÓN! Se eliminarán todos los datos.", "deleteAll");
+        document.getElementById("btn-delete-all").onclick = () => window.askConfirm("¡ATENCIÓN! Se eliminarán todos los datos permanentemente.", "deleteAll");
         document.getElementById("btn-theme").onclick = () => { document.body.classList.toggle("dark-mode"); writeLog("Cambio de tema visual", "warn"); };
-        document.getElementById("btn-log-toggle").onclick = () => document.getElementById("log-panel").classList.toggle("hidden");
+        document.getElementById("btn-log-toggle").onclick = () => document.getElementById("log-container").classList.toggle("hidden");
         document.getElementById("btn-logout").onclick = () => { if(confirm("¿Deseas cerrar la sesión de forma segura?")) { localStorage.removeItem("uf_auth"); location.reload(); } };
         document.querySelectorAll("#btn-cancel, #btn-confirm-no, #btn-cancel-recovery").forEach(b => b.onclick = () => document.querySelectorAll(".modal").forEach(m => { if(m.id !== "login-screen") m.classList.add("hidden"); }));
 
